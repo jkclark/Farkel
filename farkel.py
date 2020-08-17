@@ -12,8 +12,9 @@ class Farkel():
         self.WINNING_SCORE = self.get_winning_score()
 
         self.players = self.get_player_names()
-        self.turn_scores = [[] for player in self.players]
-        self.cumulative_scores = [[] for player in self.players]
+        self.got_in = [False for _ in self.players]
+        self.turn_scores = [[] for _ in self.players]
+        self.cumulative_scores = [[] for _ in self.players]
 
     def get_winning_score(self):
         '''Input the score required to win the game.'''
@@ -47,27 +48,39 @@ class Farkel():
 
     def play_turn(self):
         '''Input every player\'s score this turn and update the scores.'''
-        for index in range(len(self.players)):
-            while True:
-                try:
-                    score = input(f'Enter {self.players[index]}\'s score this turn: ')
-                    score = int(score)
-                    if score % 50 != 0:
-                        print('Error: Score must be divisible by 50.')
+        for index, player in enumerate(self.players):
+            if not self.got_in[index]:
+                while True:
+                    got_in = input(f'Did {player} get in? y/n:').lower()
+                    if got_in in ('y', 'yes'):
+                        self.got_in[index] = True
+                    elif got_in in ('n', 'no'):
+                        pass
+                    else:
+                        print('Error: Please enter y/yes or n/no.')
                         continue
+
+                    score = 0
                     break
-                except ValueError:
-                    print('Error: Please put in a valid number.')
+            else:
+                while True:
+                    try:
+                        score = input(f'Enter {player}\'s score this turn: ')
+                        score = int(score)
+                        if score % 50 != 0:
+                            print('Error: Score must be divisible by 50.')
+                            continue
+                        break
+                    except ValueError:
+                        print('Error: Please put in a valid number.')
 
             # Update turn_scores
-            self.turn_scores[index].append(int(score))
+            self.turn_scores[index].append(score)
 
             # Update cumulative_scores
-            if len(self.cumulative_scores[index]):
-                previous_score = self.cumulative_scores[index][-1]
-            else:
-                previous_score = 0
-            self.cumulative_scores[index].append(int(score) + previous_score)
+            self.cumulative_scores[index].append(
+                score + self.cumulative_scores[index][-1] if len(self.cumulative_scores[index]) else 0
+            )
 
     def print_score(self):
         '''Print a scoreboard with the current scores.'''
@@ -99,12 +112,18 @@ class Farkel():
 
         linestyles = ['solid', 'dashed', 'dashdot', 'dotted']
         for i in range(len(self.players)):
-            current_player_turns = self.cumulative_scores[i]
-            plt.plot(turn_numbers, current_player_turns, label=f'{self.players[i]}', linestyle=linestyles[i % 4])
+            plt.plot(turn_numbers, self.cumulative_scores[i], label=f'{self.players[i]}', linestyle=linestyles[i % 4])
 
             # Add final score to the chart
             final_score = self.cumulative_scores[i][-1]
-            plt.text(num_turns - 1, final_score, str(final_score), backgroundcolor='w', color='k')
+            score_text = plt.text(
+                num_turns - 1,
+                final_score,
+                str(final_score),
+                backgroundcolor='w',
+                color='k'
+            )
+            score_text.set_bbox(dict(alpha=0.5))  # Make the background of the score transparent
 
         # Legend
         plt.legend(loc='upper left')
