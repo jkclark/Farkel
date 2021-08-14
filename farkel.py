@@ -56,14 +56,20 @@ class Farkel():
         self.players = self.get_player_names()
         clear_screen()
 
-        self.ROW_LENGTH = (len('|') * (len(self.players) - 1)) + (CELL_WIDTH * len(self.players))
+        self.current_turn = 0
+
+        self.ROW_LENGTH = (
+            CELL_WIDTH + len('|')                   # Turn-number column
+            + (len('|') * (len(self.players) - 1))  # The '|'s between the cells
+            + (CELL_WIDTH * len(self.players))      # The cells (names with centering whitespace)
+        )
 
         # 0 = Not in yet
         # 1 = Got in on most recent turn
         # 2 = Got in at least 2 turns ago
         self.got_in = [0 for _ in self.players]
 
-        self.turn_scores = [[] for _ in self.players]
+        self.turn_scores = [[] for _ in self.players]  # -1 indicates no points, but 'got in'
         self.cumulative_scores = [[] for _ in self.players]
 
     def get_winning_score(self):
@@ -95,7 +101,8 @@ class Farkel():
     def get_turn_scores(self):
         '''Get the most recent score for each player.'''
         return [
-            player_turn_scores[-1] if player_turn_scores else 0
+            player_turn_scores[-1]
+            if (player_turn_scores and player_turn_scores[-1] != -1) else 0  # -1 = 'got in' but no points
             for player_turn_scores in self.turn_scores
         ]
 
@@ -140,16 +147,23 @@ class Farkel():
                         show_error_and_wait('Please put in a valid number')
 
             # Update turn_scores
-            self.turn_scores[index].append(score)
+            if self.got_in[index] == 1:
+                self.turn_scores[index].append(-1)  # Mark this as the 'got in' turn
+            else:
+                self.turn_scores[index].append(score)
 
             # Update cumulative_scores
             self.cumulative_scores[index].append(
                 score + self.cumulative_scores[index][-1] if len(self.cumulative_scores[index]) else 0
             )
 
+        self.current_turn += 1
+
     def print_turn_score_row(self):
         '''Add a row to the table including the most recent turn's scores.'''
         SCREEN.move(TURN_SCORE_ROW, 0)
+        SCREEN.addstr(get_center_aligned_text_with_width(str(self.current_turn), CELL_WIDTH))
+        SCREEN.addstr('|')
 
         for player_index, score in enumerate(self.get_turn_scores()):
             color = curses.color_pair(0)
@@ -168,7 +182,7 @@ class Farkel():
     def print_scoreboard_header(self, y_pos: int, x_pos: int):
         names_line = '|'.join([
             get_center_aligned_text_with_width(player, CELL_WIDTH)
-            for player in self.players
+            for player in ['ROUND', *self.players]
         ])
         #  SCREEN.addstr('-' * len(names_line) + '\n')
         SCREEN.addstr(y_pos, x_pos, names_line + '\n')
@@ -182,6 +196,8 @@ class Farkel():
 
         SCREEN.move(TURN_SCORE_ROW + 1, 0)
         SCREEN.addstr('-' * self.ROW_LENGTH + '\n')
+        SCREEN.addstr(get_center_aligned_text_with_width('TOTAL', CELL_WIDTH))
+        SCREEN.addstr('|')
 
         # Print score one by one, using color when needed
         if leading_score or (scores.count(trailing_score) == 1):
@@ -258,7 +274,6 @@ class Farkel():
         '''Create a line chart which plots all player\'s points through the game.'''
         num_turns = len(self.cumulative_scores[0])
 
-        # * Labels, tick marks, etc. *
         # Title
         now = datetime.datetime.now()
         date = now.strftime('%m/%d/%Y')
@@ -276,7 +291,12 @@ class Farkel():
 
         linestyles = ['solid', 'dashed', 'dashdot', 'dotted']
         for i in range(len(self.players)):
-            plt.plot(turn_numbers, self.cumulative_scores[i], label=f'{self.players[i]}', linestyle=linestyles[i % 4])
+            plt.plot(
+                turn_numbers,
+                self.cumulative_scores[i],
+                label=f'{self.players[i]}',
+                linestyle=linestyles[i % 4]
+            )
 
             # Add final score to the chart
             final_score = self.cumulative_scores[i][-1]
@@ -287,7 +307,7 @@ class Farkel():
                 backgroundcolor='w',
                 color='k'
             )
-            score_text.set_bbox(dict(alpha=0.5))  # Make the background of the score transparent
+            score_text.set_bbox(dict(alpha=0.2))  # Make the background of the score transparent
 
         # Legend
         plt.legend(loc='upper left')
@@ -310,7 +330,6 @@ def main(screen):
     SCREEN.refresh()
 
     # * Main game loop *
-    turn_number = 1  # TODO: Make this a property of the Farkel class
     scores = farkel.get_current_scores()
     while all(score < farkel.WINNING_SCORE for score in scores):
         # Play the turn
@@ -327,8 +346,6 @@ def main(screen):
         TURN_SCORE_ROW += 1
 
         scores = farkel.get_current_scores()
-
-        turn_number += 1
 
     # * Game over *
     # Print winner message
