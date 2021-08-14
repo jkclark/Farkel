@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import curses
 import datetime
 import matplotlib.pyplot as plt
 import numpy as np
@@ -7,12 +8,57 @@ from operator import itemgetter
 import os
 
 
+SCREEN = None
+CELL_WIDTH = 8
+INPUT_ROW = 0
+TURN_SCORE_ROW = 4
+
+
+def init_color_pairs():
+    curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+
+
+def clear_screen():
+    SCREEN.clear()
+    SCREEN.refresh()
+
+
+def write_text_on_input_line(text: str, *args):
+    '''Clear the input line and write the given text on it.'''
+    SCREEN.move(INPUT_ROW, 0)
+    SCREEN.clrtoeol()
+    SCREEN.addstr(text, *args)
+
+
+def show_error_and_wait(error_msg: str):
+    '''Show an error message on the input line and wait for input'''
+    write_text_on_input_line(
+        'ERROR: ' + error_msg + ' (press any key to continue).',
+        curses.color_pair(1),
+    )
+    SCREEN.getch()
+
+
+def get_center_aligned_text_with_width(text: str, width: int):
+    '''Get a width-long string containing text, left padded with spaces.'''
+    spaces = width - len(text)
+    left_side = spaces // 2
+    return (' ' * left_side) + text[:width] + (' ' * (spaces - left_side))
+
+
 class Farkel():
     def __init__(self):
         self.WINNING_SCORE = self.get_winning_score()
+        clear_screen()
 
         self.players = self.get_player_names()
-        self.got_in = [False for _ in self.players]
+        clear_screen()
+
+        # 0 = Not in yet
+        # 1 = Got in on most recent turn
+        # 2 = Got in at least 2 turns ago
+        self.got_in = [0 for _ in self.players]
+
         self.turn_scores = [[] for _ in self.players]
         self.cumulative_scores = [[] for _ in self.players]
 
@@ -20,29 +66,34 @@ class Farkel():
         '''Input the score required to win the game.'''
         while True:
             try:
-                target = input('How many points do you need in order to win?\n')
-                target = int(target)
+                write_text_on_input_line('How many points do you need in order to win? ')
+                target = int(SCREEN.getstr())
                 break
             except ValueError:
-                print('Error: Please put in a valid number.')
+                #  print('Error: Please put in a valid number.')
+                show_error_and_wait('Please enter a valid number')
 
         return target
 
     def get_player_names(self):
         '''Input every player\'s name and return them as a list.'''
-        players = input('Enter players, in order, separated by \', \':\n')
-        players = players.split(', ')
-
-        for player in players:
-            player = str(player)
-            print("Player:", player)
+        SCREEN.addstr('Enter players, in order, separated by \', \':\n')
+        players = SCREEN.getstr().decode().split(', ')
 
         return players
+
+    def get_turn_scores(self):
+        '''Get the most recent score for each player.'''
+        return [
+            player_turn_scores[-1] if player_turn_scores else 0
+            for player_turn_scores in self.turn_scores
+        ]
 
     def get_current_scores(self):
         '''Get the score of the game right now.'''
         return [
-            scores_list[-1] if len(scores_list) else 0
+            #  scores_list[-1] if len(scores_list) else 0
+            scores_list[-1] if scores_list else 0
             for scores_list in self.cumulative_scores
         ]
 
@@ -51,13 +102,14 @@ class Farkel():
         for index, player in enumerate(self.players):
             if not self.got_in[index]:
                 while True:
-                    got_in = input(f'Did {player} get in? y/n:').lower()
+                    write_text_on_input_line(f'Did {player} get in? y/n: ')
+                    got_in = SCREEN.getstr().decode().lower()
                     if got_in in ('y', 'yes'):
-                        self.got_in[index] = True
+                        self.got_in[index] = 1
                     elif got_in in ('n', 'no'):
                         pass
                     else:
-                        print('Error: Please enter y/yes or n/no.')
+                        show_error_and_wait('Please enter y/yes or n/no')
                         continue
 
                     score = 0
@@ -65,14 +117,20 @@ class Farkel():
             else:
                 while True:
                     try:
-                        score = input(f'Enter {player}\'s score this turn: ')
-                        score = int(score)
+                        write_text_on_input_line(f'Enter {player}\'s score this turn: ')
+                        score = int(SCREEN.getstr())
                         if score % 50 != 0:
-                            print('Error: Score must be divisible by 50.')
+                            #  print('Error: Score must be divisible by 50.')
+                            show_error_and_wait('Score must be divisible by 50')
                             continue
+
+                        if self.got_in[index] == 1:
+                            self.got_in[index] = 2
+
                         break
                     except ValueError:
-                        print('Error: Please put in a valid number.')
+                        #  print('Error: Please put in a valid number.')
+                        show_error_and_wait('Please put in a valid number')
 
             # Update turn_scores
             self.turn_scores[index].append(score)
@@ -89,6 +147,45 @@ class Farkel():
         combined = reversed(sorted(combined, key=itemgetter(1)))
         for player_score in combined:
             print(f'{player_score[0]}: {player_score[1]}')
+
+    def print_turn_score_row(self):
+        '''Add a row to the table including the most recent turn's scores.'''
+        printable_turn_scores = []
+        for player_index, score in enumerate(self.get_turn_scores()):
+            score = str(score)
+
+            if self.got_in[player_index] == 1:
+                score += '*'  # score will always be '0*' at this point
+
+            printable_turn_scores.append(score)
+
+        SCREEN.move(TURN_SCORE_ROW, 0)
+        SCREEN.addstr(
+            '|'.join([
+                get_center_aligned_text_with_width(score, CELL_WIDTH)
+                for score in printable_turn_scores
+            ])
+        )
+
+    # TODO: Not sure it makes sense to pass x and y here
+    def print_scoreboard_header(self, y_pos: int, x_pos: int):
+        names_line = '|'.join([
+            get_center_aligned_text_with_width(player, CELL_WIDTH)
+            for player in self.players
+        ])
+        #  SCREEN.addstr('-' * len(names_line) + '\n')
+        SCREEN.addstr(y_pos, x_pos, names_line + '\n')
+        SCREEN.addstr(y_pos + 1, x_pos, '-' * len(names_line))
+
+    def print_scoreboard_footer(self):
+        '''Print/Update the scoreboard footer, which includes the players' total scores.'''
+        totals_line = '|'.join([
+            get_center_aligned_text_with_width(str(score), CELL_WIDTH)
+            for score in self.get_current_scores()
+        ])
+        SCREEN.move(TURN_SCORE_ROW + 1, 0)
+        SCREEN.addstr('-' * len(totals_line) + '\n')
+        SCREEN.addstr(totals_line)
 
     def draw_line_chart(self):
         '''Create a line chart which plots all player\'s points through the game.'''
@@ -166,29 +263,50 @@ class Farkel():
         return longest_bust_player, longest_bust_streak
 
 
-def main():
+def main(screen):
+    # * Curses *
+    curses.start_color()
+    init_color_pairs()
+    curses.echo()
+
+    global SCREEN, TURN_SCORE_ROW
+    SCREEN = screen
+
     # * Setup *
     farkel = Farkel()
 
+    farkel.print_scoreboard_header(2, 0)
+    SCREEN.refresh()
+
     # * Main game loop *
-    turn_number = 1
+    turn_number = 1  # TODO: Make this a property of the Farkel class
     scores = farkel.get_current_scores()
-    while not any(score >= farkel.WINNING_SCORE for score in scores):
-        print(f'------- Beginning of Turn {turn_number} -------')
+    while all(score < farkel.WINNING_SCORE for score in scores):
+        #  print(f'------- Beginning of Turn {turn_number} -------')
 
         # Play the turn
         farkel.play_turn()
 
+        # Print this round's scores
+        farkel.print_turn_score_row()
+
+        # Update the totals
+        farkel.print_scoreboard_footer()
+
+        SCREEN.refresh()
+
+        TURN_SCORE_ROW += 1
+
         # Clear the terminal
-        os.system('clear')
+        #  os.system('clear')
 
         # Print the score
-        print("------- Scoreboard -------")
-        farkel.print_score()
+        #  print("------- Scoreboard -------")
+        #  farkel.print_score()
 
         scores = farkel.get_current_scores()
 
-        print(f'------- End of Turn {turn_number} -------')
+        #  print(f'------- End of Turn {turn_number} -------')
 
         turn_number += 1
 
@@ -219,4 +337,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    curses.wrapper(main)
