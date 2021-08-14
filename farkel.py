@@ -16,6 +16,8 @@ TURN_SCORE_ROW = 4
 
 def init_color_pairs():
     curses.init_pair(1, curses.COLOR_RED, curses.COLOR_BLACK)
+    curses.init_pair(2, curses.COLOR_YELLOW, curses.COLOR_BLACK)
+    curses.init_pair(3, curses.COLOR_GREEN, curses.COLOR_BLACK)
 
 
 def clear_screen():
@@ -34,7 +36,7 @@ def show_error_and_wait(error_msg: str):
     '''Show an error message on the input line and wait for input'''
     write_text_on_input_line(
         'ERROR: ' + error_msg + ' (press any key to continue).',
-        curses.color_pair(1),
+        curses.color_pair(1) | curses.A_REVERSE,
     )
     SCREEN.getch()
 
@@ -54,6 +56,8 @@ class Farkel():
         self.players = self.get_player_names()
         clear_screen()
 
+        self.ROW_LENGTH = (len('|') * (len(self.players) - 1)) + (CELL_WIDTH * len(self.players))
+
         # 0 = Not in yet
         # 1 = Got in on most recent turn
         # 2 = Got in at least 2 turns ago
@@ -70,15 +74,21 @@ class Farkel():
                 target = int(SCREEN.getstr())
                 break
             except ValueError:
-                #  print('Error: Please put in a valid number.')
                 show_error_and_wait('Please enter a valid number')
 
         return target
 
     def get_player_names(self):
         '''Input every player\'s name and return them as a list.'''
-        SCREEN.addstr('Enter players, in order, separated by \', \':\n')
-        players = SCREEN.getstr().decode().split(', ')
+        while True:
+            write_text_on_input_line('Enter players, in order, separated by \', \': ')
+            players = SCREEN.getstr().decode().split(', ')
+
+            if len(players) < 2:
+                show_error_and_wait('Enter at least 2 player names')
+                continue
+
+            break
 
         return players
 
@@ -92,7 +102,6 @@ class Farkel():
     def get_current_scores(self):
         '''Get the score of the game right now.'''
         return [
-            #  scores_list[-1] if len(scores_list) else 0
             scores_list[-1] if scores_list else 0
             for scores_list in self.cumulative_scores
         ]
@@ -120,7 +129,6 @@ class Farkel():
                         write_text_on_input_line(f'Enter {player}\'s score this turn: ')
                         score = int(SCREEN.getstr())
                         if score % 50 != 0:
-                            #  print('Error: Score must be divisible by 50.')
                             show_error_and_wait('Score must be divisible by 50')
                             continue
 
@@ -129,7 +137,6 @@ class Farkel():
 
                         break
                     except ValueError:
-                        #  print('Error: Please put in a valid number.')
                         show_error_and_wait('Please put in a valid number')
 
             # Update turn_scores
@@ -140,32 +147,22 @@ class Farkel():
                 score + self.cumulative_scores[index][-1] if len(self.cumulative_scores[index]) else 0
             )
 
-    def print_score(self):
-        '''Print a scoreboard with the current scores.'''
-        current_scores = self.get_current_scores()
-        combined = zip(self.players, current_scores)
-        combined = reversed(sorted(combined, key=itemgetter(1)))
-        for player_score in combined:
-            print(f'{player_score[0]}: {player_score[1]}')
-
     def print_turn_score_row(self):
         '''Add a row to the table including the most recent turn's scores.'''
-        printable_turn_scores = []
+        SCREEN.move(TURN_SCORE_ROW, 0)
+
         for player_index, score in enumerate(self.get_turn_scores()):
-            score = str(score)
+            color = curses.color_pair(0)
 
             if self.got_in[player_index] == 1:
-                score += '*'  # score will always be '0*' at this point
+                color = curses.color_pair(3)
 
-            printable_turn_scores.append(score)
+            SCREEN.addstr(get_center_aligned_text_with_width(str(score), CELL_WIDTH), color)
+            SCREEN.addstr('|')
 
-        SCREEN.move(TURN_SCORE_ROW, 0)
-        SCREEN.addstr(
-            '|'.join([
-                get_center_aligned_text_with_width(score, CELL_WIDTH)
-                for score in printable_turn_scores
-            ])
-        )
+        # Delete the last |
+        cursor_loc = SCREEN.getyx()
+        SCREEN.delch(cursor_loc[0], cursor_loc[1] - 1)
 
     # TODO: Not sure it makes sense to pass x and y here
     def print_scoreboard_header(self, y_pos: int, x_pos: int):
@@ -175,17 +172,87 @@ class Farkel():
         ])
         #  SCREEN.addstr('-' * len(names_line) + '\n')
         SCREEN.addstr(y_pos, x_pos, names_line + '\n')
-        SCREEN.addstr(y_pos + 1, x_pos, '-' * len(names_line))
+        SCREEN.addstr(y_pos + 1, x_pos, '-' * self.ROW_LENGTH)
 
     def print_scoreboard_footer(self):
         '''Print/Update the scoreboard footer, which includes the players' total scores.'''
-        totals_line = '|'.join([
-            get_center_aligned_text_with_width(str(score), CELL_WIDTH)
-            for score in self.get_current_scores()
-        ])
+        scores = self.get_current_scores()
+        leading_score = max(scores)
+        trailing_score = min(scores)
+
         SCREEN.move(TURN_SCORE_ROW + 1, 0)
-        SCREEN.addstr('-' * len(totals_line) + '\n')
-        SCREEN.addstr(totals_line)
+        SCREEN.addstr('-' * self.ROW_LENGTH + '\n')
+
+        # Print score one by one, using color when needed
+        if leading_score or (scores.count(trailing_score) == 1):
+            for score in scores:
+                if score == leading_score:
+                    color = curses.color_pair(2)
+                elif score == trailing_score:
+                    color = curses.color_pair(1)
+                else:
+                    color = curses.color_pair(0)
+
+                SCREEN.addstr(get_center_aligned_text_with_width(str(score), CELL_WIDTH), color)
+                SCREEN.addstr('|')
+
+            # Delete the last |
+            cursor_loc = SCREEN.getyx()
+            SCREEN.delch(cursor_loc[0], cursor_loc[1] - 1)
+
+        # Print all scores in default color
+        else:
+            SCREEN.addstr('|'.join([
+                get_center_aligned_text_with_width(str(score), CELL_WIDTH)
+                for score in scores
+            ]))
+
+    def get_biggest_turn(self):
+        '''Find the most points earned in one turn and the corresponding player.'''
+        biggest_turn_score = -1
+        biggest_turn_player = None
+        for index in range(len(self.players)):
+            biggest_player_score = max(self.turn_scores[index])
+            if biggest_player_score > biggest_turn_score:
+                biggest_turn_score = biggest_player_score
+                biggest_turn_player = self.players[index]
+
+        return biggest_turn_player, biggest_turn_score
+
+    def get_longest_bust_streak(self):
+        '''Find the most consecutive turns without points and the corresponding player.'''
+        longest_bust_streak = 0
+        longest_bust_player = None
+        for p_index in range(len(self.players)):
+            current = self.turn_scores[p_index]
+            streak = 0
+            for t_index in range(len(current)):
+                if current[t_index] == 0:
+                    streak += 1
+                else:
+                    if streak > longest_bust_streak:
+                        longest_bust_streak = streak
+                        longest_bust_player = self.players[p_index]
+                    streak = 0
+
+            if streak > longest_bust_streak:
+                longest_bust_streak = streak
+                longest_bust_player = self.players[p_index]
+            streak = 0
+
+        return longest_bust_player, longest_bust_streak
+
+    def print_game_stats(self):
+        '''Print end-of-game statistics.'''
+        SCREEN.move(TURN_SCORE_ROW + 4, 0)
+
+        # Biggest turn
+        biggest_player, biggest_score = self.get_biggest_turn()
+        SCREEN.addstr(f'\nMost points in one turn: {biggest_player} - {biggest_score}')
+
+        # Longest bust streak
+        longest_bust_player, longest_bust_streak = self.get_longest_bust_streak()
+        SCREEN.addstr(f'\nLongest streak of busts in a row: {longest_bust_player} - {longest_bust_streak}')
 
     def draw_line_chart(self):
         '''Create a line chart which plots all player\'s points through the game.'''
@@ -227,41 +294,6 @@ class Farkel():
 
         plt.show()
 
-    def get_biggest_turn(self):
-        '''Find the most points earned in one turn and the corresponding player.'''
-        biggest_turn_score = -1
-        biggest_turn_player = None
-        for index in range(len(self.players)):
-            biggest_player_score = max(self.turn_scores[index])
-            if biggest_player_score > biggest_turn_score:
-                biggest_turn_score = biggest_player_score
-                biggest_turn_player = self.players[index]
-
-        return biggest_turn_player, biggest_turn_score
-
-    def get_longest_bust_streak(self):
-        '''Find the most consecutive turns without points and the corresponding player.'''
-        longest_bust_streak = 0
-        longest_bust_player = None
-        for p_index in range(len(self.players)):
-            current = self.turn_scores[p_index]
-            streak = 0
-            for t_index in range(len(current)):
-                if current[t_index] == 0:
-                    streak += 1
-                else:
-                    if streak > longest_bust_streak:
-                        longest_bust_streak = streak
-                        longest_bust_player = self.players[p_index]
-                    streak = 0
-
-            if streak > longest_bust_streak:
-                longest_bust_streak = streak
-                longest_bust_player = self.players[p_index]
-            streak = 0
-
-        return longest_bust_player, longest_bust_streak
-
 
 def main(screen):
     # * Curses *
@@ -274,7 +306,6 @@ def main(screen):
 
     # * Setup *
     farkel = Farkel()
-
     farkel.print_scoreboard_header(2, 0)
     SCREEN.refresh()
 
@@ -282,8 +313,6 @@ def main(screen):
     turn_number = 1  # TODO: Make this a property of the Farkel class
     scores = farkel.get_current_scores()
     while all(score < farkel.WINNING_SCORE for score in scores):
-        #  print(f'------- Beginning of Turn {turn_number} -------')
-
         # Play the turn
         farkel.play_turn()
 
@@ -297,44 +326,24 @@ def main(screen):
 
         TURN_SCORE_ROW += 1
 
-        # Clear the terminal
-        #  os.system('clear')
-
-        # Print the score
-        #  print("------- Scoreboard -------")
-        #  farkel.print_score()
-
         scores = farkel.get_current_scores()
-
-        #  print(f'------- End of Turn {turn_number} -------')
 
         turn_number += 1
 
     # * Game over *
     # Print winner message
-    winner = farkel.players[scores.index(max(scores))]
-    print(f'\nGame over - {winner} wins!')
+    write_text_on_input_line(f'Game over - {farkel.players[scores.index(max(scores))]} wins!')
 
-    input('\nPress ENTER to see final statistics')
+    # Print game stats
+    farkel.print_game_stats()
 
-    # * Show final statistics *
-    os.system('clear')
+    SCREEN.getch()
 
-    # Final scoreboard
-    print('------- Final Scores -------')
-    farkel.print_score()
-
-    # Biggest turn
-    biggest_player, biggest_score = farkel.get_biggest_turn()
-    print(f'\nMost points in one turn: {biggest_player} - {biggest_score}')
-
-    # Longest bust streak
-    longest_bust_player, longest_bust_streak = farkel.get_longest_bust_streak()
-    print(f'\nLongest streak of busts in a row: {longest_bust_player} - {longest_bust_streak}')
-
-    # * Show line graph *
-    farkel.draw_line_chart()
+    return farkel
 
 
 if __name__ == "__main__":
-    curses.wrapper(main)
+    farkel = curses.wrapper(main)
+
+    # Need to leave curses terminal before showing the chart
+    farkel.draw_line_chart()
