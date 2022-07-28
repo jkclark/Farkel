@@ -8,8 +8,9 @@ function PlayerEntry(props) {
     if (event.nativeEvent.data === ",") {
       // Prevent duplicate names
       const nameWithoutComma = event.target.value.slice(0, -1);
-      if (props.players.includes(nameWithoutComma)) {
-        event.target.value = nameWithoutComma;
+      event.target.value = nameWithoutComma;
+
+      if (!nameWithoutComma || props.players.includes(nameWithoutComma)) {
         event.target.classList.add("is-invalid");
         return;
       }
@@ -44,7 +45,7 @@ function PlayerEntry(props) {
             className="form-label"
             htmlFor="player-names"
           >
-            Enter player names:
+            Enter player names (in play order):
           </label>
           <input
             type="text"
@@ -54,7 +55,7 @@ function PlayerEntry(props) {
             aria-describedby="player-entry-help-text"
           ></input>
           <div id="player-entry-help-text" className="form-text">
-            Comma separated
+            Enter a comma to save player
           </div>
         </div>
         <div id="player-tags">
