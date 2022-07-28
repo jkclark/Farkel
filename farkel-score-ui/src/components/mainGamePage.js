@@ -7,7 +7,9 @@ import "./mainGamePage.css";
 function MainGamePage(props) {
   return (
     <Container id="main-game-page">
-      <Scoreboard players={props.players} />
+      <div id="main-game-page-stack">
+        <Scoreboard players={props.players} turnScores={props.turnScores} />
+      </div>
     </Container>
   );
 }

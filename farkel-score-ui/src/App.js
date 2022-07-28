@@ -8,12 +8,20 @@ import "./App.css";
 
 function App() {
   const [players, setPlayers] = useState([]);
+  const [turnScores, setTurnScores] = useState([
+    [100, 200, 300],
+    [200, 300, 500],
+  ]);
 
   return (
     <>
       <Welcome />
-      <PlayerEntry players={players} setPlayers={setPlayers} />
-      <MainGamePage players={players} />
+      <PlayerEntry
+        players={players}
+        setPlayers={setPlayers}
+        setTurnScores={setTurnScores}
+      />
+      <MainGamePage players={players} turnScores={turnScores} />
     </>
   );
 }
