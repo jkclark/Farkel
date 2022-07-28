@@ -30,6 +30,11 @@ function PlayerEntry(props) {
     }
   }
 
+  function startGame() {
+    document.getElementById("player-entry").style.display = "none";
+    document.getElementById("scorekeeper").style.display = "flex";
+  }
+
   return (
     <Container id="player-entry">
       <div id="player-entry-stack">
@@ -65,7 +70,9 @@ function PlayerEntry(props) {
             </Button>
           ))}
         </div>
-        <Button disabled={props.players.length <= 0}>Start</Button>
+        <Button disabled={props.players.length <= 0} onClick={startGame}>
+          Start
+        </Button>
       </div>
     </Container>
   );
