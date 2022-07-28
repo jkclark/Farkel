@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 import PlayerEntry from "./components/playerEntry";
-import Scorekeeper from "./components/scorekeeper";
+import MainGamePage from "./components/mainGamePage";
 import Welcome from "./components/welcome";
 
 import "./App.css";
@@ -13,7 +13,7 @@ function App() {
     <>
       <Welcome />
       <PlayerEntry players={players} setPlayers={setPlayers} />
-      <Scorekeeper players={players} />
+      <MainGamePage players={players} />
     </>
   );
 }

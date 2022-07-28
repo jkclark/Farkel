@@ -33,7 +33,7 @@ function PlayerEntry(props) {
 
   function startGame() {
     document.getElementById("player-entry").style.display = "none";
-    document.getElementById("scorekeeper").style.display = "flex";
+    document.getElementById("main-game-page").style.display = "flex";
   }
 
   return (
