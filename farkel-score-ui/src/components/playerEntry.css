@@ -1,0 +1,30 @@
+#player-entry {
+  display: none;
+  justify-content: center;
+}
+
+#player-entry-stack {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+
+  margin-top: 5%;
+}
+
+#player-entry-label {
+  margin-right: 0.5rem;
+}
+
+#player-tags {
+  display: flex;
+}
+
+.player-tag {
+  margin: 0 0.5rem;
+  padding: 3px 10px;
+
+  border-radius: 6px;
+  
+  background-color: gray;
+}
