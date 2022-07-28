@@ -1,26 +1,7 @@
-import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
 import "./playerEntry.css";
-
-function PlayerTag(props) {
-  function removePlayer() {
-    const newPlayers = [...props.players];
-    const index = newPlayers.indexOf(props.player);
-    if (index > -1) {
-      newPlayers.splice(index, 1);
-      props.setPlayers(newPlayers);
-    }
-  }
-
-  return (
-    <div className="player-tag">
-      {props.player}
-      <Button onClick={removePlayer}>X</Button>
-    </div>
-  );
-}
 
 function PlayerEntry(props) {
   function checkPlayerInput(event) {
@@ -37,6 +18,15 @@ function PlayerEntry(props) {
 
       props.setPlayers([...props.players, nameWithoutComma]);
       event.target.value = "";
+    }
+  }
+
+  function removePlayer(player) {
+    const newPlayers = [...props.players];
+    const index = newPlayers.indexOf(player);
+    if (index > -1) {
+      newPlayers.splice(index, 1);
+      props.setPlayers(newPlayers);
     }
   }
 
@@ -64,15 +54,18 @@ function PlayerEntry(props) {
         </div>
         <div id="player-tags">
           {props.players.map((player, index) => (
-            <PlayerTag
-              player={player}
+            <Button
+              className="player-tag"
+              variant="secondary"
               key={index.toString()}
-              players={props.players}
-              setPlayers={props.setPlayers}
-            />
+              onClick={() => removePlayer(player)}
+              title="Remove player"
+            >
+              {player}
+            </Button>
           ))}
         </div>
-        <Button>Start</Button>
+        <Button disabled={props.players.length <= 0}>Start</Button>
       </div>
     </Container>
   );
