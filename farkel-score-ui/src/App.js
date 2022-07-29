@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import PlayerEntry from "./components/playerEntry";
+import GameSetup from "./components/gameSetup";
 import MainGamePage from "./components/mainGamePage";
 import Welcome from "./components/welcome";
 
@@ -14,7 +14,7 @@ function App() {
   return (
     <>
       <Welcome />
-      <PlayerEntry
+      <GameSetup
         players={players}
         setPlayers={setPlayers}
         setTurnScores={setTurnScores}

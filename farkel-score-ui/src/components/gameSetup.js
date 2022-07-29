@@ -1,8 +1,9 @@
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
-import "./playerEntry.css";
+import "./gameSetup.css";
 
+// TODO: Ask for number being played to
 function PlayerEntry(props) {
   function checkPlayerInput(event) {
     if (event.nativeEvent.data === ",") {

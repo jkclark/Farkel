@@ -33,6 +33,14 @@ function TurnInput(props) {
     incrementCurrentPlayer();
   }
 
+  function handleScoreInput() {
+    const score = parseInt(
+      document.getElementsByClassName("score-input")[0].value
+    );
+    recordTurnScore(score);
+    incrementCurrentPlayer();
+  }
+
   function YesNoButtons() {
     return (
       <div className="yes-no-stack">
@@ -47,13 +55,20 @@ function TurnInput(props) {
     );
   }
 
+  // TODO: Allow only numbers in text input
   function ScoreInput() {
     return (
       <div className="score-input-stack">
         <label className="turn-score-input-label" htmlFor="turn-score">
           Enter *player*'s score:
         </label>
-        <input type="text" className="form-control" name="turn-score"></input>
+        <input
+          type="text"
+          className="form-control score-input"
+          pattern="[0-9]"
+          name="turn-score"
+        ></input>
+        <Button onClick={handleScoreInput}>Enter</Button>
       </div>
     );
   }
