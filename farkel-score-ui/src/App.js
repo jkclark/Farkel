@@ -8,6 +8,7 @@ import "./App.css";
 
 function App() {
   const [players, setPlayers] = useState([]);
+  const [winNumber, setWinNumber] = useState(10000);
   const [turnScores, setTurnScores] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(0);
 
@@ -16,11 +17,13 @@ function App() {
       <Welcome />
       <GameSetup
         players={players}
+        setWinNumber={setWinNumber}
         setPlayers={setPlayers}
         setTurnScores={setTurnScores}
       />
       <MainGamePage
         players={players}
+        winNumber={winNumber}
         currentPlayer={currentPlayer}
         setCurrentPlayer={setCurrentPlayer}
         turnScores={turnScores}

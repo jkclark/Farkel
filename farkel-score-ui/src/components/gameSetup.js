@@ -1,10 +1,11 @@
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
 import "./gameSetup.css";
 
 // TODO: Ask for number being played to
-function PlayerEntry(props) {
+function GameSetup(props) {
   function checkPlayerInput(event) {
     if (event.nativeEvent.data === ",") {
       // Prevent duplicate names
@@ -32,33 +33,51 @@ function PlayerEntry(props) {
     }
   }
 
+  const [winNumberIsValid, setWinNumberIsValid] = useState(true);
+  function checkWinNumberInput() {
+    const winNumberInput = document.getElementById("win-number-input");
+    const winNumber = parseInt(winNumberInput.value);
+    if (winNumberInput.value !== "" && (isNaN(winNumber) || winNumber <= 0)) {
+      winNumberInput.classList.add("is-invalid");
+      setWinNumberIsValid(false);
+    } else {
+      winNumberInput.classList.remove("is-invalid");
+      setWinNumberIsValid(true);
+    }
+  }
+
   function startGame() {
     // Add the first turn of scores to the list
     props.setTurnScores([[]]);
 
-    document.getElementById("player-entry").style.display = "none";
+    // Save the points needed to win
+    props.setWinNumber(
+      parseInt(document.getElementById("win-number-input").value)
+    );
+
+    document.getElementById("game-setup").style.display = "none";
     document.getElementById("main-game-page").style.display = "flex";
   }
 
   return (
-    <Container id="player-entry">
-      <div id="player-entry-stack">
+    <Container id="game-setup">
+      <div id="game-setup-stack">
         <div>
           <label
-            id="player-entry-label"
+            id="player-input-label"
             className="form-label"
-            htmlFor="player-names"
+            htmlFor="player-names-input"
           >
             Enter player names (in play order):
           </label>
           <input
             type="text"
             className="form-control"
-            name="player-names"
+            name="player-names-input"
             onInput={checkPlayerInput}
-            aria-describedby="player-entry-help-text"
+            aria-describedby="player-input-help-text"
           ></input>
-          <div id="player-entry-help-text" className="form-text">
+          <div id="player-input-help-text" className="form-text">
             Enter a comma to save player
           </div>
         </div>
@@ -75,7 +94,30 @@ function PlayerEntry(props) {
             </Button>
           ))}
         </div>
-        <Button disabled={props.players.length <= 0} onClick={startGame}>
+        <div>
+          <label
+            id="win-number-input-label"
+            className="form-label"
+            htmlFor="win-number-input"
+          >
+            Enter points needed to win:
+          </label>
+          <input
+            id="win-number-input"
+            type="text"
+            className="form-control"
+            name="win-number-input"
+            onInput={checkWinNumberInput}
+            aria-describedby="win-number-input-help-text"
+          ></input>
+          <div id="win-number-input-help-text" className="form-text">
+            Leave blank for 10,000
+          </div>
+        </div>
+        <Button
+          disabled={props.players.length <= 0 || !winNumberIsValid}
+          onClick={startGame}
+        >
           Start
         </Button>
       </div>
@@ -83,4 +125,4 @@ function PlayerEntry(props) {
   );
 }
 
-export default PlayerEntry;
+export default GameSetup;

@@ -9,6 +9,7 @@ function MainGamePage(props) {
   return (
     <Container id="main-game-page">
       <div id="main-game-page-stack">
+        <h4>Points to win: {props.winNumber}</h4>
         <TurnInput
           players={props.players}
           currentPlayer={props.currentPlayer}

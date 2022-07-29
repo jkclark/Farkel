@@ -6,7 +6,7 @@ import "./welcome.css";
 function Welcome() {
   function startGame() {
     document.getElementById("welcome").style.display = "none";
-    document.getElementById("player-entry").style.display = "flex";
+    document.getElementById("game-setup").style.display = "flex";
   }
 
   return (
