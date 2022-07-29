@@ -1,0 +1,9 @@
+.yes-no-stack {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.score-input-stack {
+  display: flex;
+  gap: 0.5rem;
+}

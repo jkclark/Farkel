@@ -32,6 +32,9 @@ function PlayerEntry(props) {
   }
 
   function startGame() {
+    // Add the first turn of scores to the list
+    props.setTurnScores([[]]);
+
     document.getElementById("player-entry").style.display = "none";
     document.getElementById("main-game-page").style.display = "flex";
   }
