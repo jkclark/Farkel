@@ -26,14 +26,14 @@ function Scoreboard(props) {
   const crossMark = String.fromCodePoint("0x274C");
   function ScoreCell(props) {
     if (props.score === -2) {
-      return <td key={props.keyValue}>{checkMark}</td>;
+      return <td>{checkMark}</td>;
     }
 
     if (props.score === -1) {
-      return <td key={props.keyValue}>{crossMark}</td>;
+      return <td>{crossMark}</td>;
     }
 
-    return <td key={props.keyValue}>{props.score}</td>;
+    return <td>{props.score}</td>;
   }
 
   return (
@@ -51,7 +51,7 @@ function Scoreboard(props) {
           <tr key={index}>
             <td>{index + 1}</td>
             {oneTurnScores.map((score, index) => (
-              <ScoreCell score={score} keyValue={index} />
+              <ScoreCell score={score} key={index} />
             ))}
           </tr>
         ))}
