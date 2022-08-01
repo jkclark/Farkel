@@ -44,7 +44,9 @@ function TurnInput(props) {
   function YesNoButtons() {
     return (
       <div className="yes-no-stack">
-        <div>Did *player* get in?</div>
+        <div>
+          Did <b>{props.players[props.currentPlayer]}</b> get in?
+        </div>
         <Button variant="success" onClick={handleYesClick}>
           Yes
         </Button>
@@ -60,7 +62,7 @@ function TurnInput(props) {
     return (
       <div className="score-input-stack">
         <label className="turn-score-input-label" htmlFor="turn-score">
-          Enter *player*'s score:
+          Enter <b>{props.players[props.currentPlayer]}'s</b> score:
         </label>
         <input
           type="text"
