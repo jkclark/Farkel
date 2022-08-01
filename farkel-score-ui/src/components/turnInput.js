@@ -1,12 +1,20 @@
+import { useState } from "react";
 import Button from "react-bootstrap/Button";
 
 import "./turnInput.css";
 
 function TurnInput(props) {
+  const [gameToEnd, setGameToEnd] = useState(false);
+
   function incrementCurrentPlayer() {
     if (props.currentPlayer === props.players.length - 1) {
       // Loop back around to the first player
       props.setCurrentPlayer(0);
+
+      if (gameToEnd) {
+        props.setGameOver(true);
+        return;
+      }
 
       // Add a new (empty) turn of scores to the list
       const newTurnScores = [...props.turnScores];
@@ -28,7 +36,7 @@ function TurnInput(props) {
       props.setTotalScores(newTotalScores);
 
       if (newTotalScores[props.currentPlayer] >= props.winNumber) {
-        props.setGameOver(true);
+        setGameToEnd(true);
       }
     }
   }
