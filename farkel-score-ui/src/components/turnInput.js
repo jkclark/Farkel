@@ -26,6 +26,10 @@ function TurnInput(props) {
       const newTotalScores = [...props.totalScores];
       newTotalScores[props.currentPlayer] += score;
       props.setTotalScores(newTotalScores);
+
+      if (newTotalScores[props.currentPlayer] >= props.winNumber) {
+        props.setGameOver(true);
+      }
     }
   }
 
