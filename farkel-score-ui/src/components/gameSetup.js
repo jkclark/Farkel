@@ -51,9 +51,11 @@ function GameSetup(props) {
     props.setTurnScores([[]]);
 
     // Save the points needed to win
-    props.setWinNumber(
-      parseInt(document.getElementById("win-number-input").value)
-    );
+    if (document.getElementById("win-number-input").value !== "") {
+      props.setWinNumber(
+        parseInt(document.getElementById("win-number-input").value)
+      );
+    }
 
     document.getElementById("game-setup").style.display = "none";
     document.getElementById("main-game-page").style.display = "flex";
