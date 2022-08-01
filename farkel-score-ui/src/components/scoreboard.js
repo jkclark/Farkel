@@ -1,4 +1,3 @@
-import { cloneNode } from "@babel/types";
 import Table from "react-bootstrap/Table";
 
 function Scoreboard(props) {
@@ -7,11 +6,15 @@ function Scoreboard(props) {
       return [];
     }
 
-    const totals = [...props.turnScores[0]];
+    const totals = new Array(props.players.length).fill(0);
     if (props.turnScores.length > 1) {
+      // Start at index 1 because you cannot accumulate score on turn 0
       props.turnScores.slice(1).forEach((oneTurnScores) => {
         oneTurnScores.forEach((score, playerIndex) => {
-          totals[playerIndex] += score;
+          // Don't count -1 or -2 (or 0)
+          if (score > 0) {
+            totals[playerIndex] += score;
+          }
         });
       });
     }
@@ -19,7 +22,20 @@ function Scoreboard(props) {
     return totals;
   }
 
-  const cumulativeScores = [];
+  const checkMark = String.fromCodePoint("0x2705");
+  const crossMark = String.fromCodePoint("0x274C");
+  function ScoreCell(props) {
+    if (props.score === -2) {
+      return <td key={props.keyValue}>{checkMark}</td>;
+    }
+
+    if (props.score === -1) {
+      return <td key={props.keyValue}>{crossMark}</td>;
+    }
+
+    return <td key={props.keyValue}>{props.score}</td>;
+  }
+
   return (
     <Table striped bordered>
       <thead>
@@ -35,7 +51,7 @@ function Scoreboard(props) {
           <tr key={index}>
             <td>{index + 1}</td>
             {oneTurnScores.map((score, index) => (
-              <td key={index}>{score}</td>
+              <ScoreCell score={score} keyValue={index} />
             ))}
           </tr>
         ))}

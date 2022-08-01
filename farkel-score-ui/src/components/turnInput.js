@@ -24,7 +24,7 @@ function TurnInput(props) {
   }
 
   function handleYesClick() {
-    recordTurnScore(0);
+    recordTurnScore(-2);
     incrementCurrentPlayer();
   }
 
