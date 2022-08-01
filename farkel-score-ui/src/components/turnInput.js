@@ -21,6 +21,12 @@ function TurnInput(props) {
     const newTurnScores = [...props.turnScores];
     newTurnScores[newTurnScores.length - 1].push(score);
     props.setTurnScores(newTurnScores);
+
+    if (score > 0) {
+      const newTotalScores = [...props.totalScores];
+      newTotalScores[props.currentPlayer] += score;
+      props.setTotalScores(newTotalScores);
+    }
   }
 
   function handleYesClick() {

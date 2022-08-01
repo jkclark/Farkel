@@ -10,6 +10,7 @@ function App() {
   const [players, setPlayers] = useState([]);
   const [winNumber, setWinNumber] = useState(10000);
   const [turnScores, setTurnScores] = useState([]);
+  const [totalScores, setTotalScores] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(0);
 
   return (
@@ -20,6 +21,7 @@ function App() {
         setWinNumber={setWinNumber}
         setPlayers={setPlayers}
         setTurnScores={setTurnScores}
+        setTotalScores={setTotalScores}
       />
       <MainGamePage
         players={players}
@@ -28,6 +30,8 @@ function App() {
         setCurrentPlayer={setCurrentPlayer}
         turnScores={turnScores}
         setTurnScores={setTurnScores}
+        totalScores={totalScores}
+        setTotalScores={setTotalScores}
       />
     </>
   );

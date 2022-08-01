@@ -50,6 +50,9 @@ function GameSetup(props) {
     // Add the first turn of scores to the list
     props.setTurnScores([[]]);
 
+    // Set up total scores array
+    props.setTotalScores(new Array(props.players.length).fill(0));
+
     // Save the points needed to win
     if (document.getElementById("win-number-input").value !== "") {
       props.setWinNumber(
