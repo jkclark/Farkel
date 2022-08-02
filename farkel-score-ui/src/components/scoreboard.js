@@ -62,7 +62,8 @@ function Scoreboard(props) {
               key={index}
               className={shouldBeHighlighted(index) ? highlightClass : ""}
             >
-              <b>{score}</b> (-{props.winNumber - score})
+              <b>{score}</b> ({score > props.winNumber ? "+" : "-"}
+              {Math.abs(props.winNumber - score)})
             </td>
           ))}
         </tr>
