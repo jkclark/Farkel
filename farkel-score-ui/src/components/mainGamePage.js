@@ -24,6 +24,7 @@ function MainGamePage(props) {
             setCurrentPlayer={props.setCurrentPlayer}
             totalScores={props.totalScores}
             setTotalScores={props.setTotalScores}
+            gameWinner={gameWinner}
             setGameWinner={setGameWinner}
           />
         )}

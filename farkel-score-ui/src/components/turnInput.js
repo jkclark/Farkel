@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Button from "react-bootstrap/Button";
 
 import "./turnInput.css";
@@ -32,8 +32,6 @@ function TurnInput(props) {
     }
   }
 
-  useEffect(() => {});
-
   function recordTurnScore(score) {
     const newTurnScores = [...props.turnScores];
     newTurnScores[newTurnScores.length - 1].push(score);
@@ -64,12 +62,19 @@ function TurnInput(props) {
     incrementCurrentPlayer();
   }
 
-  function handleScoreInput() {
-    const score = parseInt(
-      document.getElementsByClassName("score-input")[0].value
-    );
+  function handleScoreInput(event) {
+    // NOTE: This line hides the "form submission canceled because the form is
+    //       not connected" warning, which we don't care about.
+    event.preventDefault();
+
+    const scoreInput = document.getElementsByClassName("score-input")[0];
+    const score = parseInt(scoreInput.value);
     const totalScores = recordTurnScore(score);
     incrementCurrentPlayer(totalScores);
+
+    if (props.gameWinner === -1) {
+      scoreInput.focus();
+    }
   }
 
   function YesNoButtons() {
@@ -89,9 +94,17 @@ function TurnInput(props) {
   }
 
   // TODO: Allow only numbers in text input
+  // TODO: Don't allow empty input
   function ScoreInput() {
+    const inputRef = useRef(null);
+
+    // Give this element focus when it is rendered
+    useEffect(() => {
+      inputRef.current.focus();
+    });
+
     return (
-      <div className="score-input-stack">
+      <form action="" className="score-input-stack">
         <label className="turn-score-input-label" htmlFor="turn-score">
           Enter <b>{props.players[props.currentPlayer]}'s</b> score:
         </label>
@@ -100,9 +113,12 @@ function TurnInput(props) {
           className="form-control score-input"
           pattern="[0-9]"
           name="turn-score"
+          ref={inputRef}
         ></input>
-        <Button onClick={handleScoreInput}>Enter</Button>
-      </div>
+        <Button type="submit" onClick={handleScoreInput}>
+          Enter
+        </Button>
+      </form>
     );
   }
 

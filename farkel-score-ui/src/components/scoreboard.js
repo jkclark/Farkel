@@ -54,13 +54,15 @@ function Scoreboard(props) {
       </tbody>
       <tfoot>
         <tr>
-          <td>Total</td>
+          <td>
+            <b>Total</b>
+          </td>
           {props.totalScores.map((score, index) => (
             <td
               key={index}
               className={shouldBeHighlighted(index) ? highlightClass : ""}
             >
-              {score}
+              <b>{score}</b> (-{props.winNumber - score})
             </td>
           ))}
         </tr>
