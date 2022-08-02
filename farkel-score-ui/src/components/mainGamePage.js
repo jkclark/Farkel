@@ -7,20 +7,14 @@ import TurnInput from "./turnInput";
 import "./mainGamePage.css";
 
 function MainGamePage(props) {
-  const [gameOver, setGameOver] = useState(false);
-
-  function getGameWinner() {
-    const totalScores = [...props.totalScores];
-    const winner = totalScores.indexOf(Math.max(...totalScores));
-    return winner;
-  }
+  const [gameWinner, setGameWinner] = useState(-1);
 
   return (
     <Container id="main-game-page">
       <div id="main-game-page-stack">
-        {gameOver && <h4>{props.players[getGameWinner()]} wins!</h4>}
+        {gameWinner !== -1 && <h4>{props.players[gameWinner]} wins!</h4>}
         <h4>Points to win: {props.winNumber}</h4>
-        {!gameOver && (
+        {gameWinner === -1 && (
           <TurnInput
             players={props.players}
             winNumber={props.winNumber}
@@ -30,7 +24,7 @@ function MainGamePage(props) {
             setCurrentPlayer={props.setCurrentPlayer}
             totalScores={props.totalScores}
             setTotalScores={props.setTotalScores}
-            setGameOver={setGameOver}
+            setGameWinner={setGameWinner}
           />
         )}
         <Scoreboard
@@ -38,7 +32,7 @@ function MainGamePage(props) {
           winNumber={props.winNumber}
           turnScores={props.turnScores}
           totalScores={props.totalScores}
-          gameOver={gameOver}
+          gameWinner={gameWinner}
         />
       </div>
     </Container>

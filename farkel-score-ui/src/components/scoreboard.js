@@ -1,18 +1,26 @@
 import Table from "react-bootstrap/Table";
 
 function Scoreboard(props) {
+  const highlightClass = "table-primary";
   const checkMark = String.fromCodePoint("0x2705");
   const crossMark = String.fromCodePoint("0x274C");
   function ScoreCell(props) {
+    let textValue;
     if (props.score === -2) {
-      return <td>{checkMark}</td>;
+      textValue = checkMark;
+    } else if (props.score === -1) {
+      textValue = crossMark;
+    } else {
+      textValue = props.score;
     }
 
-    if (props.score === -1) {
-      return <td>{crossMark}</td>;
-    }
+    return (
+      <td className={props.highlighted ? highlightClass : ""}>{textValue}</td>
+    );
+  }
 
-    return <td>{props.score}</td>;
+  function shouldBeHighlighted(index) {
+    return props.gameWinner !== -1 && props.gameWinner === index;
   }
 
   return (
@@ -20,8 +28,13 @@ function Scoreboard(props) {
       <thead>
         <tr>
           <th>Turn #</th>
-          {props.players.map((player) => (
-            <th key={player}>{player}</th>
+          {props.players.map((player, index) => (
+            <th
+              key={player}
+              className={shouldBeHighlighted(index) ? highlightClass : ""}
+            >
+              {player}
+            </th>
           ))}
         </tr>
       </thead>
@@ -29,8 +42,12 @@ function Scoreboard(props) {
         {props.turnScores.map((oneTurnScores, index) => (
           <tr key={index}>
             <td>{index + 1}</td>
-            {oneTurnScores.map((score, index) => (
-              <ScoreCell score={score} key={index} />
+            {oneTurnScores.map((score, playerIndex) => (
+              <ScoreCell
+                score={score}
+                key={playerIndex}
+                highlighted={shouldBeHighlighted(playerIndex)}
+              />
             ))}
           </tr>
         ))}
@@ -39,7 +56,12 @@ function Scoreboard(props) {
         <tr>
           <td>Total</td>
           {props.totalScores.map((score, index) => (
-            <td key={index}>{score}</td>
+            <td
+              key={index}
+              className={shouldBeHighlighted(index) ? highlightClass : ""}
+            >
+              {score}
+            </td>
           ))}
         </tr>
       </tfoot>

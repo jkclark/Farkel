@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Button from "react-bootstrap/Button";
 
 import "./turnInput.css";
@@ -6,13 +6,20 @@ import "./turnInput.css";
 function TurnInput(props) {
   const [gameToEnd, setGameToEnd] = useState(false);
 
-  function incrementCurrentPlayer() {
+  function getGameWinner(scores) {
+    const winner = scores.indexOf(Math.max(...scores));
+    return winner;
+  }
+
+  function incrementCurrentPlayer(updatedTotalScores) {
     if (props.currentPlayer === props.players.length - 1) {
       // Loop back around to the first player
       props.setCurrentPlayer(0);
 
       if (gameToEnd) {
-        props.setGameOver(true);
+        // Passing scores here is required because the update to props.totalScores
+        // (in recordTurnScore) hasn't necessarily gone through yet for the last person's turn.
+        props.setGameWinner(getGameWinner(updatedTotalScores));
         return;
       }
 
@@ -24,6 +31,8 @@ function TurnInput(props) {
       props.setCurrentPlayer(props.currentPlayer + 1);
     }
   }
+
+  useEffect(() => {});
 
   function recordTurnScore(score) {
     const newTurnScores = [...props.turnScores];
@@ -38,7 +47,11 @@ function TurnInput(props) {
       if (newTotalScores[props.currentPlayer] >= props.winNumber) {
         setGameToEnd(true);
       }
+
+      return newTotalScores;
     }
+
+    return props.totalScores;
   }
 
   function handleYesClick() {
@@ -55,8 +68,8 @@ function TurnInput(props) {
     const score = parseInt(
       document.getElementsByClassName("score-input")[0].value
     );
-    recordTurnScore(score);
-    incrementCurrentPlayer();
+    const totalScores = recordTurnScore(score);
+    incrementCurrentPlayer(totalScores);
   }
 
   function YesNoButtons() {
