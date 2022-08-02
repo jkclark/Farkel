@@ -12,7 +12,7 @@ function Welcome() {
   return (
     <Container id="welcome">
       <div id="welcome-stack">
-        <h1>Farkle Party!</h1>
+        <h1>LBI Farkle Party!</h1>
         <Button id="start-button" onClick={startGame}>
           Let's go
         </Button>
