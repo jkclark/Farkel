@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Farkle Score",
+  "name": "Online Farkle Scorekeeper",
   "icons": [
     {
       "src": "favicon.ico",
