@@ -113,11 +113,8 @@ function GameSetup(props) {
             className="form-control"
             name="win-number-input"
             onInput={checkWinNumberInput}
-            aria-describedby="win-number-input-help-text"
+            defaultValue="10000"
           ></input>
-          <div id="win-number-input-help-text" className="form-text">
-            Leave blank for 10,000
-          </div>
         </div>
         <Button
           disabled={props.players.length <= 0 || !winNumberIsValid}
