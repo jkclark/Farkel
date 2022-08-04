@@ -10,6 +10,9 @@ function Scoreboard(props) {
       textValue = checkMark;
     } else if (cellProps.score === -1) {
       textValue = crossMark;
+    } else if (cellProps.score < -2) {
+      // Negative score indicates edited value
+      textValue = "*" + -1 * cellProps.score;
     } else {
       textValue = cellProps.score;
     }

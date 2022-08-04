@@ -36,12 +36,16 @@ function TurnInput(props) {
     }
   }
 
+  function scoreShouldCount(score) {
+    return score !== -1 && score !== -2;
+  }
+
   function accumulateScores(scores) {
     const totalScores = new Array(props.players.length).fill(0);
     scores.forEach((turnScores, turnIndex) => {
       turnScores.forEach((score, playerIndex) => {
-        if (score > 0) {
-          totalScores[playerIndex] += score;
+        if (scoreShouldCount(score)) {
+          totalScores[playerIndex] += Math.abs(score);
         }
       });
     });
@@ -70,7 +74,7 @@ function TurnInput(props) {
     }
 
     // Update turn scores
-    newTurnScores[props.editingTurn][props.editingPlayer] = score;
+    newTurnScores[props.editingTurn][props.editingPlayer] = -1 * score;
     props.setTurnScores(newTurnScores);
 
     // Update total scores
@@ -92,9 +96,9 @@ function TurnInput(props) {
     newTurnScores[newTurnScores.length - 1].push(score);
     props.setTurnScores(newTurnScores);
 
-    if (score > 0) {
+    if (scoreShouldCount(score)) {
       const newTotalScores = [...props.totalScores];
-      newTotalScores[props.currentPlayer] += score;
+      newTotalScores[props.currentPlayer] += Math.abs(score);
       props.setTotalScores(newTotalScores);
 
       if (newTotalScores[props.currentPlayer] >= props.winNumber) {
@@ -124,6 +128,7 @@ function TurnInput(props) {
 
     const scoreInput = document.getElementsByClassName("score-input")[0];
     const score = parseInt(scoreInput.value);
+    // TODO: What to do about negative numbers? Prevent them somehow...
     if (props.editingTurn !== null && props.editingPlayer !== null) {
       editTurnScore(score);
     } else {
@@ -164,8 +169,9 @@ function TurnInput(props) {
     // If a cell is clicked on, set the input's value to that turn/player's score
     useEffect(() => {
       if (props.editingTurn !== null && props.editingPlayer !== null) {
-        inputRef.current.value =
-          props.turnScores[props.editingTurn][props.editingPlayer];
+        inputRef.current.value = Math.abs(
+          props.turnScores[props.editingTurn][props.editingPlayer]
+        );
       } else {
         inputRef.current.value = "";
       }
