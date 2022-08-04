@@ -8,6 +8,8 @@ import "./mainGamePage.css";
 
 function MainGamePage(props) {
   const [gameWinner, setGameWinner] = useState(-1);
+  const [editingTurn, setEditingTurn] = useState(null);
+  const [editingPlayer, setEditingPlayer] = useState(null);
 
   return (
     <Container id="main-game-page">
@@ -24,6 +26,10 @@ function MainGamePage(props) {
             setCurrentPlayer={props.setCurrentPlayer}
             totalScores={props.totalScores}
             setTotalScores={props.setTotalScores}
+            editingTurn={editingTurn}
+            setEditingTurn={setEditingTurn}
+            editingPlayer={editingPlayer}
+            setEditingPlayer={setEditingPlayer}
             gameWinner={gameWinner}
             setGameWinner={setGameWinner}
           />
@@ -33,6 +39,10 @@ function MainGamePage(props) {
           winNumber={props.winNumber}
           turnScores={props.turnScores}
           totalScores={props.totalScores}
+          editingTurn={editingTurn}
+          setEditingTurn={setEditingTurn}
+          editingPlayer={editingPlayer}
+          setEditingPlayer={setEditingPlayer}
           gameWinner={gameWinner}
         />
       </div>

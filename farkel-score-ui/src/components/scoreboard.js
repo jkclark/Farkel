@@ -1,21 +1,42 @@
 import Table from "react-bootstrap/Table";
 
 function Scoreboard(props) {
-  const highlightClass = "table-primary";
+  const winHighlightClass = "table-primary";
   const checkMark = String.fromCodePoint("0x2705");
   const crossMark = String.fromCodePoint("0x274C");
-  function ScoreCell(props) {
+  function ScoreCell(cellProps) {
     let textValue;
-    if (props.score === -2) {
+    if (cellProps.score === -2) {
       textValue = checkMark;
-    } else if (props.score === -1) {
+    } else if (cellProps.score === -1) {
       textValue = crossMark;
     } else {
-      textValue = props.score;
+      textValue = cellProps.score;
+    }
+
+    function handleClick() {
+      if (props.gameWinner === -1) {
+        props.setEditingTurn(cellProps.turnIndex);
+        props.setEditingPlayer(cellProps.playerIndex);
+      }
+    }
+
+    let highlightClass;
+    if (shouldBeHighlighted(cellProps.playerIndex)) {
+      highlightClass = winHighlightClass;
+    } else if (
+      props.editingTurn === cellProps.turnIndex &&
+      props.editingPlayer === cellProps.playerIndex
+    ) {
+      highlightClass = "table-warning";
+    } else {
+      highlightClass = "";
     }
 
     return (
-      <td className={props.highlighted ? highlightClass : ""}>{textValue}</td>
+      <td className={highlightClass} onClick={handleClick}>
+        {textValue}
+      </td>
     );
   }
 
@@ -31,7 +52,7 @@ function Scoreboard(props) {
           {props.players.map((player, index) => (
             <th
               key={player}
-              className={shouldBeHighlighted(index) ? highlightClass : ""}
+              className={shouldBeHighlighted(index) ? winHighlightClass : ""}
             >
               {player}
             </th>
@@ -46,6 +67,8 @@ function Scoreboard(props) {
               <ScoreCell
                 score={score}
                 key={playerIndex}
+                turnIndex={index}
+                playerIndex={playerIndex}
                 highlighted={shouldBeHighlighted(playerIndex)}
               />
             ))}
@@ -60,7 +83,7 @@ function Scoreboard(props) {
           {props.totalScores.map((score, index) => (
             <td
               key={index}
-              className={shouldBeHighlighted(index) ? highlightClass : ""}
+              className={shouldBeHighlighted(index) ? winHighlightClass : ""}
             >
               <b>{score}</b> ({score > props.winNumber ? "+" : "-"}
               {Math.abs(props.winNumber - score)})

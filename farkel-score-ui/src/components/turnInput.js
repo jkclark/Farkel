@@ -11,6 +11,10 @@ function TurnInput(props) {
     return winner;
   }
 
+  function endGame(scores) {
+    props.setGameWinner(getGameWinner(scores));
+  }
+
   function incrementCurrentPlayer(updatedTotalScores) {
     if (props.currentPlayer === props.players.length - 1) {
       // Loop back around to the first player
@@ -19,7 +23,7 @@ function TurnInput(props) {
       if (gameToEnd) {
         // Passing scores here is required because the update to props.totalScores
         // (in recordTurnScore) hasn't necessarily gone through yet for the last person's turn.
-        props.setGameWinner(getGameWinner(updatedTotalScores));
+        endGame(updatedTotalScores);
         return;
       }
 
@@ -32,7 +36,58 @@ function TurnInput(props) {
     }
   }
 
+  function accumulateScores(scores) {
+    const totalScores = new Array(props.players.length).fill(0);
+    scores.forEach((turnScores, turnIndex) => {
+      turnScores.forEach((score, playerIndex) => {
+        if (score > 0) {
+          totalScores[playerIndex] += score;
+        }
+      });
+    });
+
+    return totalScores;
+  }
+
+  function editTurnScore(score) {
+    const newTurnScores = [...props.turnScores];
+
+    let endGameNow = false;
+    // Check if game should end (either now or end of turn)
+    if (
+      props.totalScores[props.editingPlayer] -
+        props.turnScores[props.editingTurn][props.editingPlayer] +
+        score >=
+      props.winNumber
+    ) {
+      setGameToEnd(true);
+
+      // End game now if this edit has resulted in a winner
+      if (props.editingTurn < props.turnScores.length - 1) {
+        newTurnScores.pop(); // Remove last turn (which shouldn't have been played)
+        endGameNow = true;
+      }
+    }
+
+    // Update turn scores
+    newTurnScores[props.editingTurn][props.editingPlayer] = score;
+    props.setTurnScores(newTurnScores);
+
+    // Update total scores
+    const updatedTotalScores = accumulateScores(newTurnScores);
+    props.setTotalScores(updatedTotalScores);
+
+    if (endGameNow) {
+      endGame(updatedTotalScores);
+    }
+
+    // Reset editing turn and player
+    props.setEditingTurn(null);
+    props.setEditingPlayer(null);
+  }
+
   function recordTurnScore(score) {
+    // Entering a new score
     const newTurnScores = [...props.turnScores];
     newTurnScores[newTurnScores.length - 1].push(score);
     props.setTurnScores(newTurnScores);
@@ -69,8 +124,11 @@ function TurnInput(props) {
 
     const scoreInput = document.getElementsByClassName("score-input")[0];
     const score = parseInt(scoreInput.value);
-    const totalScores = recordTurnScore(score);
-    incrementCurrentPlayer(totalScores);
+    if (props.editingTurn !== null && props.editingPlayer !== null) {
+      editTurnScore(score);
+    } else {
+      incrementCurrentPlayer(recordTurnScore(score));
+    }
 
     if (props.gameWinner === -1) {
       scoreInput.focus();
@@ -103,10 +161,24 @@ function TurnInput(props) {
       inputRef.current.focus();
     });
 
+    // If a cell is clicked on, set the input's value to that turn/player's score
+    useEffect(() => {
+      if (props.editingTurn !== null && props.editingPlayer !== null) {
+        inputRef.current.value =
+          props.turnScores[props.editingTurn][props.editingPlayer];
+      } else {
+        inputRef.current.value = "";
+      }
+    });
+
     return (
       <form action="" className="score-input-stack">
         <label className="turn-score-input-label" htmlFor="turn-score">
-          Enter <b>{props.players[props.currentPlayer]}'s</b> score:
+          {"Enter "}
+          <b>
+            {props.players[props.editingPlayer || props.currentPlayer]}'s
+          </b>{" "}
+          score:
         </label>
         <input
           type="text"
