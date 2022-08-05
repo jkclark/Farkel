@@ -1,0 +1,8 @@
+.score-cell:hover {
+  /* Darken cell background on hover */
+  background-color: rgba(0,0,0,.075);
+}
+
+td.score-cell.editing-cell {
+  border: 2px dotted black;
+}

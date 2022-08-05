@@ -1,5 +1,7 @@
 import Table from "react-bootstrap/Table";
 
+import "./scoreboard.css";
+
 function Scoreboard(props) {
   const winHighlightClass = "table-primary";
   const checkMark = String.fromCodePoint("0x2705");
@@ -31,13 +33,13 @@ function Scoreboard(props) {
       props.editingTurn === cellProps.turnIndex &&
       props.editingPlayer === cellProps.playerIndex
     ) {
-      highlightClass = "table-warning";
+      highlightClass = "editing-cell";
     } else {
       highlightClass = "";
     }
 
     return (
-      <td className={highlightClass} onClick={handleClick}>
+      <td className={"score-cell " + highlightClass} onClick={handleClick}>
         {textValue}
       </td>
     );
