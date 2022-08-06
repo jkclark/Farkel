@@ -1,7 +1,7 @@
 import { useState } from "react";
 import Container from "react-bootstrap/Container";
 
-import Graph from "./graph";
+import CumSumGraph from "./cumSumGraph";
 import Scoreboard from "./scoreboard";
 import TurnInput from "./turnInput";
 
@@ -41,22 +41,24 @@ function MainGamePage(props) {
             setGameWinner={setGameWinner}
           />
         )}
-        <Scoreboard
-          players={props.players}
-          winNumber={props.winNumber}
-          turnScores={props.turnScores}
-          totalScores={props.totalScores}
-          editingTurn={editingTurn}
-          setEditingTurn={setEditingTurn}
-          editingPlayer={editingPlayer}
-          setEditingPlayer={setEditingPlayer}
-          gameWinner={gameWinner}
-        />
-        <Graph
-          players={props.players}
-          winNumber={props.winNumber}
-          turnScores={props.turnScores}
-        />
+        <div style={{ display: "flex" }}>
+          <Scoreboard
+            players={props.players}
+            winNumber={props.winNumber}
+            turnScores={props.turnScores}
+            totalScores={props.totalScores}
+            editingTurn={editingTurn}
+            setEditingTurn={setEditingTurn}
+            editingPlayer={editingPlayer}
+            setEditingPlayer={setEditingPlayer}
+            gameWinner={gameWinner}
+          />
+          <CumSumGraph
+            players={props.players}
+            winNumber={props.winNumber}
+            turnScores={props.turnScores}
+          />
+        </div>
       </div>
     </Container>
   );

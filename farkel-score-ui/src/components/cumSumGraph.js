@@ -1,4 +1,4 @@
-import { LineChart, Line } from "recharts";
+import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
 
 function transformTurnsToCumSums(turnScores) {
   if (turnScores.length === 0) {
@@ -23,19 +23,36 @@ function transformTurnsToCumSums(turnScores) {
   return cumSums;
 }
 
-function Graph(props) {
+function generateGraphData(turnScores) {
+  const data = [];
+  const cumSums = transformTurnsToCumSums(turnScores);
+
+  cumSums.forEach((cumSum, index) => {
+    data.push({
+      index: index,
+      cumSums: cumSum,
+    });
+  });
+
+  return data;
+}
+
+function CumSumGraph(props) {
   return (
     <LineChart
-      width={400}
-      height={200}
-      data={transformTurnsToCumSums(props.turnScores)}
+      width={500}
+      height={500}
+      data={generateGraphData(props.turnScores)}
     >
+      <CartesianGrid strokeDasharray="3 3" />
+      <XAxis dataKey="index" />
+      <YAxis />
       {props.turnScores.length > 0 &&
         props.turnScores[0].map((_, index) => (
           <Line
             key={index}
             type="monotone"
-            dataKey={(v) => v[index]}
+            dataKey={(v) => v["cumSums"][index]}
             stroke="#8884d8"
           />
         ))}
@@ -43,4 +60,4 @@ function Graph(props) {
   );
 }
 
-export default Graph;
+export default CumSumGraph;
