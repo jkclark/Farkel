@@ -54,35 +54,37 @@ function TurnInput(props) {
   }
 
   function editTurnScore(score) {
-    const newTurnScores = [...props.turnScores];
+    if (score !== props.turnScores[props.editingTurn][props.editingPlayer]) {
+      const newTurnScores = [...props.turnScores];
 
-    let endGameNow = false;
-    // Check if game should end (either now or end of turn)
-    if (
-      props.totalScores[props.editingPlayer] -
-        props.turnScores[props.editingTurn][props.editingPlayer] +
-        score >=
-      props.winNumber
-    ) {
-      setGameToEnd(true);
+      let endGameNow = false;
+      // Check if game should end (either now or end of turn)
+      if (
+        props.totalScores[props.editingPlayer] -
+          props.turnScores[props.editingTurn][props.editingPlayer] +
+          score >=
+        props.winNumber
+      ) {
+        setGameToEnd(true);
 
-      // End game now if this edit has resulted in a winner
-      if (props.editingTurn < props.turnScores.length - 1) {
-        newTurnScores.pop(); // Remove last turn (which shouldn't have been played)
-        endGameNow = true;
+        // End game now if this edit has resulted in a winner
+        if (props.editingTurn < props.turnScores.length - 1) {
+          newTurnScores.pop(); // Remove last turn (which shouldn't have been played)
+          endGameNow = true;
+        }
       }
-    }
 
-    // Update turn scores
-    newTurnScores[props.editingTurn][props.editingPlayer] = -1 * score;
-    props.setTurnScores(newTurnScores);
+      // Update turn scores
+      newTurnScores[props.editingTurn][props.editingPlayer] = -1 * score;
+      props.setTurnScores(newTurnScores);
 
-    // Update total scores
-    const updatedTotalScores = accumulateScores(newTurnScores);
-    props.setTotalScores(updatedTotalScores);
+      // Update total scores
+      const updatedTotalScores = accumulateScores(newTurnScores);
+      props.setTotalScores(updatedTotalScores);
 
-    if (endGameNow) {
-      endGame(updatedTotalScores);
+      if (endGameNow) {
+        endGame(updatedTotalScores);
+      }
     }
 
     // Reset editing turn and player
