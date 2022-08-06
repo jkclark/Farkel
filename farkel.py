@@ -316,45 +316,50 @@ class Farkel():
 
 
 def main(screen):
-    # * Curses *
-    curses.start_color()
-    init_color_pairs()
-    curses.echo()
+    farkel = None
+    try:
+        # * Curses *
+        curses.start_color()
+        init_color_pairs()
+        curses.echo()
 
-    global SCREEN, TURN_SCORE_ROW
-    SCREEN = screen
+        global SCREEN, TURN_SCORE_ROW
+        SCREEN = screen
 
-    # * Setup *
-    farkel = Farkel()
-    farkel.print_scoreboard_header(2, 0)
-    SCREEN.refresh()
-
-    # * Main game loop *
-    scores = farkel.get_current_scores()
-    while all(score < farkel.WINNING_SCORE for score in scores):
-        # Play the turn
-        farkel.play_turn()
-
-        # Print this round's scores
-        farkel.print_turn_score_row()
-
-        # Update the totals
-        farkel.print_scoreboard_footer()
-
+        # * Setup *
+        farkel = Farkel()
+        farkel.print_scoreboard_header(2, 0)
         SCREEN.refresh()
 
-        TURN_SCORE_ROW += 1
-
+        # * Main game loop *
         scores = farkel.get_current_scores()
+        while all(score < farkel.WINNING_SCORE for score in scores):
+            # Play the turn
+            farkel.play_turn()
 
-    # * Game over *
-    # Print winner message
-    write_text_on_input_line(f'Game over - {farkel.players[scores.index(max(scores))]} wins!')
+            # Print this round's scores
+            farkel.print_turn_score_row()
 
-    # Print game stats
-    farkel.print_game_stats()
+            # Update the totals
+            farkel.print_scoreboard_footer()
 
-    SCREEN.getch()
+            SCREEN.refresh()
+
+            TURN_SCORE_ROW += 1
+
+            scores = farkel.get_current_scores()
+
+        # * Game over *
+        # Print winner message
+        write_text_on_input_line(f'Game over - {farkel.players[scores.index(max(scores))]} wins!')
+        # Print game stats
+        farkel.print_game_stats()
+
+        SCREEN.getch()
+    except Exception:
+        pass
+    finally:
+        return farkel
 
     return farkel
 
