@@ -75,7 +75,8 @@ function TurnInput(props) {
       }
 
       // Update turn scores
-      newTurnScores[props.editingTurn][props.editingPlayer] = -1 * score;
+      newTurnScores[props.editingTurn][props.editingPlayer] =
+        -1 * Math.abs(score);
       props.setTurnScores(newTurnScores);
 
       // Update total scores
@@ -113,14 +114,16 @@ function TurnInput(props) {
     return props.totalScores;
   }
 
-  function handleYesClick() {
-    recordTurnScore(-2);
-    incrementCurrentPlayer();
-  }
+  function handleYesNoClick(score) {
+    if (props.editingTurn !== null && props.editingPlayer !== null) {
+      editTurnScore(score);
+    } else {
+      recordTurnScore(score);
 
-  function handleNoClick() {
-    recordTurnScore(-1);
-    incrementCurrentPlayer();
+      // Don't need to pass total scores to iCP because the game
+      // can't end on a "got in"/"didn't get in" turn.
+      incrementCurrentPlayer();
+    }
   }
 
   function handleScoreInput(event) {
@@ -130,6 +133,12 @@ function TurnInput(props) {
 
     const scoreInput = document.getElementsByClassName("score-input")[0];
     const score = parseInt(scoreInput.value);
+
+    // TODO: Handle this better in the UI
+    if (isNaN(score)) {
+      return;
+    }
+
     // TODO: What to do about negative numbers? Prevent them somehow...
     if (props.editingTurn !== null && props.editingPlayer !== null) {
       editTurnScore(score);
@@ -146,12 +155,28 @@ function TurnInput(props) {
     return (
       <div className="yes-no-stack">
         <div>
-          Did <b>{props.players[props.currentPlayer]}</b> get in?
+          Did{" "}
+          <b>
+            {props.editingPlayer !== null
+              ? props.players[props.editingPlayer]
+              : props.players[props.currentPlayer]}
+          </b>{" "}
+          get in?
         </div>
-        <Button variant="success" onClick={handleYesClick}>
+        <Button
+          variant="success"
+          onClick={() => {
+            handleYesNoClick(-2);
+          }}
+        >
           Yes
         </Button>
-        <Button variant="danger" onClick={handleNoClick}>
+        <Button
+          variant="danger"
+          onClick={() => {
+            handleYesNoClick(-1);
+          }}
+        >
           No
         </Button>
       </div>
@@ -194,7 +219,6 @@ function TurnInput(props) {
         <input
           type="text"
           className="form-control score-input"
-          pattern="[0-9]"
           name="turn-score"
           ref={inputRef}
         ></input>
@@ -203,6 +227,18 @@ function TurnInput(props) {
         </Button>
       </form>
     );
+  }
+
+  if (props.editingTurn !== null && props.editingPlayer !== null) {
+    if (
+      [-1, -2].includes(
+        props.turnScores[props.editingTurn][props.editingPlayer]
+      )
+    ) {
+      return <YesNoButtons />;
+    }
+
+    return <ScoreInput />;
   }
 
   // If player is not in yet, show buttons

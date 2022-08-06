@@ -11,6 +11,9 @@ import "./mainGamePage.css";
 //       define constants for them and use them everywhere.
 function MainGamePage(props) {
   const [gameWinner, setGameWinner] = useState(-1);
+
+  // TODO: Considering coupling these two values together, we are always modifying
+  //       them in tandem.
   const [editingTurn, setEditingTurn] = useState(null);
   const [editingPlayer, setEditingPlayer] = useState(null);
 
