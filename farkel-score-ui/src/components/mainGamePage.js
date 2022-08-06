@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Container from "react-bootstrap/Container";
 
+import Graph from "./graph";
 import Scoreboard from "./scoreboard";
 import TurnInput from "./turnInput";
 
@@ -50,6 +51,11 @@ function MainGamePage(props) {
           editingPlayer={editingPlayer}
           setEditingPlayer={setEditingPlayer}
           gameWinner={gameWinner}
+        />
+        <Graph
+          players={props.players}
+          winNumber={props.winNumber}
+          turnScores={props.turnScores}
         />
       </div>
     </Container>
