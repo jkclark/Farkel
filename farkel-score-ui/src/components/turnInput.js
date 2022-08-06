@@ -182,7 +182,10 @@ function TurnInput(props) {
         <label className="turn-score-input-label" htmlFor="turn-score">
           {"Enter "}
           <b>
-            {props.players[props.editingPlayer || props.currentPlayer]}'s
+            {props.editingPlayer !== null
+              ? props.players[props.editingPlayer]
+              : props.players[props.currentPlayer]}
+            's
           </b>{" "}
           score:
         </label>
