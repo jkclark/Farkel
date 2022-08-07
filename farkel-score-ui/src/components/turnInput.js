@@ -1,10 +1,10 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Button from "react-bootstrap/Button";
 
 import "./turnInput.css";
 
 function TurnInput(props) {
-  const [gameToEnd, setGameToEnd] = useState(false);
+  let gameToEnd = false;
 
   function getGameWinner(scores) {
     const winner = scores.indexOf(Math.max(...scores));
@@ -65,7 +65,7 @@ function TurnInput(props) {
           score >=
         props.winNumber
       ) {
-        setGameToEnd(true);
+        gameToEnd = true;
 
         // End game now if this edit has resulted in a winner
         if (props.editingTurn < props.turnScores.length - 1) {
@@ -105,7 +105,7 @@ function TurnInput(props) {
       props.setTotalScores(newTotalScores);
 
       if (newTotalScores[props.currentPlayer] >= props.winNumber) {
-        setGameToEnd(true);
+        gameToEnd = true;
       }
 
       return newTotalScores;
