@@ -1,9 +1,9 @@
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
-import "./welcome.css";
+import "./welcomePage.css";
 
-function Welcome() {
+function WelcomePage() {
   function startGame() {
     document.getElementById("welcome").style.display = "none";
     document.getElementById("game-setup").style.display = "flex";
@@ -21,4 +21,4 @@ function Welcome() {
   );
 }
 
-export default Welcome;
+export default WelcomePage;

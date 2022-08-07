@@ -1,9 +1,9 @@
 import { useState } from "react";
 
-import GameSetup from "./components/gameSetup";
+import GameSetupPage from "./components/gameSetupPage";
 import MainGamePage from "./components/mainGamePage";
 import PostGamePage from "./components/postGamePage";
-import Welcome from "./components/welcome";
+import WelcomePage from "./components/welcomePage";
 
 import "./App.css";
 
@@ -16,8 +16,8 @@ function App() {
 
   return (
     <>
-      <Welcome />
-      <GameSetup
+      <WelcomePage />
+      <GameSetupPage
         players={players}
         setWinNumber={setWinNumber}
         setPlayers={setPlayers}

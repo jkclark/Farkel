@@ -2,10 +2,10 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
-import "./gameSetup.css";
+import "./gameSetupPage.css";
 
 // TODO: Ask for number being played to
-function GameSetup(props) {
+function GameSetupPage(props) {
   function checkPlayerInput(event) {
     if (event.nativeEvent.data === ",") {
       // Prevent duplicate names
@@ -127,4 +127,4 @@ function GameSetup(props) {
   );
 }
 
-export default GameSetup;
+export default GameSetupPage;
