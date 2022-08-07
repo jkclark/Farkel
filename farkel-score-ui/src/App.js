@@ -2,6 +2,7 @@ import { useState } from "react";
 
 import GameSetup from "./components/gameSetup";
 import MainGamePage from "./components/mainGamePage";
+import PostGamePage from "./components/postGamePage";
 import Welcome from "./components/welcome";
 
 import "./App.css";
@@ -32,6 +33,11 @@ function App() {
         setTurnScores={setTurnScores}
         totalScores={totalScores}
         setTotalScores={setTotalScores}
+      />
+      <PostGamePage
+        players={players}
+        winNumber={winNumber}
+        turnScores={turnScores}
       />
     </>
   );
