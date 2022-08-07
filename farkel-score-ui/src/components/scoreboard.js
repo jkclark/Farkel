@@ -49,6 +49,17 @@ function Scoreboard(props) {
     return props.gameWinner !== -1 && props.gameWinner === index;
   }
 
+  function getGradientStyle(score) {
+    const scorePercentage = (score * 100) / props.winNumber;
+    return (
+      "linear-gradient(to right, rgba(0, 0, 0, 0.25) " +
+      scorePercentage +
+      "%, white " +
+      scorePercentage +
+      "%)"
+    );
+  }
+
   return (
     <Table striped bordered>
       <thead>
@@ -89,6 +100,12 @@ function Scoreboard(props) {
             <td
               key={index}
               className={shouldBeHighlighted(index) ? winHighlightClass : ""}
+              // Only show gradient for non-winners
+              style={
+                props.gameWinner === index
+                  ? {}
+                  : { background: getGradientStyle(score) }
+              }
             >
               <b>{score}</b> ({score > props.winNumber ? "+" : "-"}
               {Math.abs(props.winNumber - score)})
