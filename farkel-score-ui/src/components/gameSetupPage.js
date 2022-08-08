@@ -4,7 +4,6 @@ import Container from "react-bootstrap/Container";
 
 import "./gameSetupPage.css";
 
-// TODO: Ask for number being played to
 function GameSetupPage(props) {
   function checkPlayerInput(event) {
     if (event.nativeEvent.data === ",") {
@@ -47,6 +46,8 @@ function GameSetupPage(props) {
   }
 
   function startGame() {
+    // TODO: Maximum number of players?
+
     // Add the first turn of scores to the list
     props.setTurnScores([[]]);
 

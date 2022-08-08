@@ -1,4 +1,12 @@
-import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import {
+  CartesianGrid,
+  Legend,
+  Line,
+  LineChart,
+  ReferenceLine,
+  XAxis,
+  YAxis,
+} from "recharts";
 
 function transformTurnsToCumSums(turnScores) {
   if (turnScores.length === 0) {
@@ -47,13 +55,17 @@ function CumSumGraph(props) {
       <CartesianGrid strokeDasharray="3 3" />
       <XAxis dataKey="index" />
       <YAxis />
+      <Legend align="right" />
+      <ReferenceLine y={props.winNumber} stroke="black" strokeWidth={2} />
       {props.turnScores.length > 0 &&
         props.turnScores[0].map((_, index) => (
           <Line
+            name={props.players[index]}
             key={index}
             type="monotone"
             dataKey={(v) => v["cumSums"][index]}
-            stroke="#8884d8"
+            stroke={props.colors[index]}
+            strokeWidth={2}
           />
         ))}
     </LineChart>
