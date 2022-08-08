@@ -104,7 +104,9 @@ function TurnInput(props) {
       newTotalScores[props.currentPlayer] += Math.abs(score);
       props.setTotalScores(newTotalScores);
 
-      if (newTotalScores[props.currentPlayer] >= props.winNumber) {
+      // Seems like props.currentPlayer not necessarily updated,
+      // so we need to just check the whole array
+      if (newTotalScores.some((score) => score >= props.winNumber)) {
         gameToEnd = true;
       }
 
