@@ -38,6 +38,7 @@ function App() {
         players={players}
         winNumber={winNumber}
         turnScores={turnScores}
+        totalScores={totalScores}
       />
     </>
   );

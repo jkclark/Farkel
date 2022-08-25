@@ -1,6 +1,7 @@
 #post-game-page {
   display: none;
   justify-content: center;
+  flex-direction: column;
 
   margin-top: 5%;
 }

@@ -1,6 +1,7 @@
 import Container from "react-bootstrap/Container";
 
 import CumSumGraph from "./cumSumGraph";
+import PostGameStatTable from "./postGameStatTable";
 
 import "./postGamePage.css";
 
@@ -23,6 +24,11 @@ function PostGamePage(props) {
         colors={colors.slice(0, props.players.length)}
         winNumber={props.winNumber}
         turnScores={props.turnScores}
+      />
+      <PostGameStatTable
+        players={props.players}
+        turnScores={props.turnScores}
+        totalScores={props.totalScores}
       />
     </Container>
   );
