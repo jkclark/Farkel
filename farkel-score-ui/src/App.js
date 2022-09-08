@@ -14,6 +14,7 @@ function App() {
   const [totalScores, setTotalScores] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(0);
 
+  // TODO: Game won't end if a player still not in
   return (
     <>
       <WelcomePage />
