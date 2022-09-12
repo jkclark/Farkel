@@ -22,7 +22,22 @@ function PostGameStatTable(props) {
     return playerScores;
   }
 
-  function getPlayerAverageTurnScore(playerTurnScores) {
+  function getTurnsToGetIn(playerTurnScores) {
+    if (playerTurnScores.length === 0) {
+      return 0;
+    }
+
+    let turnsToGetIn = 0;
+    let turn = 0;
+    while (turn < playerTurnScores.length && playerTurnScores[turn] < 0) {
+      turnsToGetIn += 1;
+      turn += 1;
+    }
+
+    return turnsToGetIn;
+  }
+
+  function getAverageTurnScore(playerTurnScores) {
     let scoreTurns = 0;
     let totalScore = 0;
     playerTurnScores.forEach((score) => {
@@ -34,6 +49,10 @@ function PostGameStatTable(props) {
     });
 
     return scoreTurns === 0 ? 0 : totalScore / scoreTurns;
+  }
+
+  function getBustTurns(playerTurnScores) {
+    return playerTurnScores.filter((score) => score === 0).length;
   }
 
   function prepareTableRows() {
@@ -50,8 +69,10 @@ function PostGameStatTable(props) {
         playerIndex,
         player,
         props.totalScores[playerIndex],
-        getPlayerAverageTurnScore(playerTurnScores),
+        getTurnsToGetIn(playerTurnScores),
+        getAverageTurnScore(playerTurnScores),
         Math.max(...playerTurnScores, 0),
+        getBustTurns(playerTurnScores),
       ];
 
       // Format numbers in output
@@ -70,8 +91,10 @@ function PostGameStatTable(props) {
     "Order",
     "Name",
     "Score",
+    "Turns to get in",
     "Average Points per Turn",
     "Highest Turn",
+    "Bust Turns",
   ];
 
   return (
