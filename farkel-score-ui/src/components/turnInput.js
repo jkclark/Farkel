@@ -4,8 +4,6 @@ import Button from "react-bootstrap/Button";
 import "./turnInput.css";
 
 function TurnInput(props) {
-  let gameToEnd = false;
-
   function getGameWinner(scores) {
     const winner = scores.indexOf(Math.max(...scores));
     return winner;
@@ -20,7 +18,8 @@ function TurnInput(props) {
       // Loop back around to the first player
       props.setCurrentPlayer(0);
 
-      if (gameToEnd) {
+      // End game if someone has won
+      if (updatedTotalScores.some((score) => score >= props.winNumber)) {
         // Passing scores here is required because the update to props.totalScores
         // (in recordTurnScore) hasn't necessarily gone through yet for the last person's turn.
         endGame(updatedTotalScores);
@@ -58,16 +57,14 @@ function TurnInput(props) {
       const newTurnScores = [...props.turnScores];
 
       let endGameNow = false;
-      // Check if game should end (either now or end of turn)
+      // Check if game should end right now
       if (
         props.totalScores[props.editingPlayer] -
           props.turnScores[props.editingTurn][props.editingPlayer] +
           score >=
         props.winNumber
       ) {
-        gameToEnd = true;
-
-        // End game now if this edit has resulted in a winner
+        // End game now if this edit means a player won during a previous turn
         if (props.editingTurn < props.turnScores.length - 1) {
           newTurnScores.pop(); // Remove last turn (which shouldn't have been played)
           endGameNow = true;
@@ -104,12 +101,6 @@ function TurnInput(props) {
       newTotalScores[props.currentPlayer] += Math.abs(score);
       props.setTotalScores(newTotalScores);
 
-      // Seems like props.currentPlayer not necessarily updated,
-      // so we need to just check the whole array
-      if (newTotalScores.some((score) => score >= props.winNumber)) {
-        gameToEnd = true;
-      }
-
       return newTotalScores;
     }
 
@@ -120,11 +111,7 @@ function TurnInput(props) {
     if (props.editingTurn !== null && props.editingPlayer !== null) {
       editTurnScore(score);
     } else {
-      recordTurnScore(score);
-
-      // Don't need to pass total scores to iCP because the game
-      // can't end on a "got in"/"didn't get in" turn.
-      incrementCurrentPlayer();
+      incrementCurrentPlayer(recordTurnScore(score));
     }
   }
 
