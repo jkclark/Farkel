@@ -7,3 +7,14 @@
   display: flex;
   gap: 0.5rem;
 }
+
+.turn-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.turn-result-inputs-stack {
+  display: flex;
+  gap: 0.5rem;
+}

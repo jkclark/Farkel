@@ -140,23 +140,15 @@ function TurnInput(props) {
     }
   }
 
-  function YesNoButtons() {
+  function YesNoButtons(buttonProps) {
     return (
       <div className="yes-no-stack">
-        <div>
-          Did{" "}
-          <b>
-            {props.editingPlayer !== null
-              ? props.players[props.editingPlayer]
-              : props.players[props.currentPlayer]}
-          </b>{" "}
-          get in?
-        </div>
         <Button
           variant="success"
           onClick={() => {
             handleYesNoClick(-2);
           }}
+          disabled={buttonProps.disabled}
         >
           Yes
         </Button>
@@ -165,6 +157,7 @@ function TurnInput(props) {
           onClick={() => {
             handleYesNoClick(-1);
           }}
+          disabled={buttonProps.disabled}
         >
           No
         </Button>
@@ -174,7 +167,7 @@ function TurnInput(props) {
 
   // TODO: Allow only numbers in text input
   // TODO: Don't allow empty input
-  function ScoreInput() {
+  function ScoreInput(scoreInputProps) {
     const inputRef = useRef(null);
 
     // Give this element focus when it is rendered
@@ -195,29 +188,25 @@ function TurnInput(props) {
 
     return (
       <form action="" className="score-input-stack">
-        <label className="turn-score-input-label" htmlFor="turn-score">
-          {"Enter "}
-          <b>
-            {props.editingPlayer !== null
-              ? props.players[props.editingPlayer]
-              : props.players[props.currentPlayer]}
-            's
-          </b>{" "}
-          score:
-        </label>
         <input
           type="text"
           className="form-control score-input"
           name="turn-score"
           ref={inputRef}
+          disabled={scoreInputProps.disabled}
         ></input>
-        <Button type="submit" onClick={handleScoreInput}>
+        <Button
+          type="submit"
+          onClick={handleScoreInput}
+          disabled={scoreInputProps.disabled}
+        >
           Enter
         </Button>
       </form>
     );
   }
 
+  /*
   if (props.editingTurn !== null && props.editingPlayer !== null) {
     if (
       [-1, -2].includes(
@@ -229,18 +218,24 @@ function TurnInput(props) {
 
     return <ScoreInput />;
   }
+  */
 
-  // If player is not in yet, show buttons
-  if (
+  const playerIn = !(
     props.turnScores.length === 0 || // Nobody has played
     (props.turnScores.length === 1 && // Still everybody's first turn
-      props.turnScores[0].length < props.players.length) ||
-    props.turnScores[props.turnScores.length - 2][props.currentPlayer] === -1 // Not in yet
-  ) {
-    return <YesNoButtons />;
-  } else {
-    return <ScoreInput />;
-  }
+      props.turnScores[0].length < props.players.length) || // Not in yet
+    props.turnScores[props.turnScores.length - 2][props.currentPlayer] === -1
+  );
+
+  return (
+    <div className="turn-input">
+      <h3>{props.players[props.currentPlayer]}'s turn</h3>
+      <div className="turn-result-inputs-stack">
+        <YesNoButtons disabled={playerIn} />
+        <ScoreInput disabled={!playerIn} />
+      </div>
+    </div>
+  );
 }
 
 export default TurnInput;
