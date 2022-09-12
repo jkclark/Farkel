@@ -207,6 +207,10 @@ function TurnInput(props) {
   }
 
   /*
+  // TODO: If you edit a turn where someone did not get in into a turn where
+  //       they did get in, all subsequent "not in" turns need to be updated.
+  //       This is a non-trivial change that needs to happen, so I'm putting
+  //       it off for now.
   if (props.editingTurn !== null && props.editingPlayer !== null) {
     if (
       [-1, -2].includes(
