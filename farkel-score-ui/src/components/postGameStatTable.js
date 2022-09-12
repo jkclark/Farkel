@@ -1,20 +1,39 @@
 import Table from "react-bootstrap/Table";
 
 function PostGameStatTable(props) {
+  function formatValue(value) {
+    if (typeof value === "number") {
+      return new Intl.NumberFormat("en", { maximumFractionDigits: 2 }).format(
+        value
+      );
+    }
+
+    return value;
+  }
+
   function getPlayerTurnScores(playerIndex, turnScores) {
     const playerScores = [];
     turnScores.forEach((scores) => {
-      playerScores.push(scores[playerIndex]);
+      if (playerIndex < scores.length) {
+        playerScores.push(scores[playerIndex]);
+      }
     });
 
     return playerScores;
   }
 
   function getPlayerAverageTurnScore(playerTurnScores) {
-    // TODO: Do not count turns before the player is in
-    return props.turnScores[0]
-      ? playerTurnScores.reduce((a, b) => a + b) / playerTurnScores.length
-      : 0;
+    let scoreTurns = 0;
+    let totalScore = 0;
+    playerTurnScores.forEach((score) => {
+      // Do not count turns before the player is in
+      if (score > 0) {
+        scoreTurns += 1;
+        totalScore += score;
+      }
+    });
+
+    return scoreTurns === 0 ? 0 : totalScore / scoreTurns;
   }
 
   function prepareTableRows() {
@@ -26,12 +45,22 @@ function PostGameStatTable(props) {
         props.turnScores
       );
 
-      rows.push([]);
-      rows[playerIndex].push(playerIndex);
-      rows[playerIndex].push(player);
-      rows[playerIndex].push(props.totalScores[playerIndex]);
-      rows[playerIndex].push(getPlayerAverageTurnScore(playerTurnScores));
-      rows[playerIndex].push(Math.max(...playerTurnScores) || 0);
+      // Prepare array of values
+      const rowValues = [
+        playerIndex,
+        player,
+        props.totalScores[playerIndex],
+        getPlayerAverageTurnScore(playerTurnScores),
+        Math.max(...playerTurnScores, 0),
+      ];
+
+      // Format numbers in output
+      const formattedRow = [];
+      rowValues.forEach((value) => {
+        formattedRow.push(formatValue(value));
+      });
+
+      rows.push(formattedRow);
     });
 
     return rows;
