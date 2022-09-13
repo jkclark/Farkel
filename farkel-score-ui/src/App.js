@@ -9,6 +9,7 @@ import "./App.css";
 
 function App() {
   const [players, setPlayers] = useState([]);
+  const [playerColors, setPlayerColors] = useState([]);
   const [winNumber, setWinNumber] = useState(10000);
   const [turnScores, setTurnScores] = useState([]);
   const [totalScores, setTotalScores] = useState([]);
@@ -19,8 +20,10 @@ function App() {
       <WelcomePage />
       <GameSetupPage
         players={players}
+        playerColors={playerColors}
         setWinNumber={setWinNumber}
         setPlayers={setPlayers}
+        setPlayerColors={setPlayerColors}
         setTurnScores={setTurnScores}
         setTotalScores={setTotalScores}
       />

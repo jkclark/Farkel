@@ -25,3 +25,44 @@
   margin: 0.5rem;
   padding: 3px 10px;
 }
+
+/**************************/
+
+.win-number-input-stack {
+  display: flex;
+  gap: 2em;
+}
+
+.player-input-stack {
+  display: flex;
+  flex-direction: column;
+}
+
+.title-and-input-stack {
+  display: flex;
+}
+
+.player-list-and-color-stack {
+  display: flex;
+  justify-content: space-around;
+}
+
+.player-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5em;
+}
+
+.player-entry {
+  display: flex;
+  justify-content: space-between;
+  gap: 2em;
+
+  /* min-width: 300px; */
+}
+
+.color-dot {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+}
