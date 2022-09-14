@@ -5,12 +5,14 @@ import MainGamePage from "./components/mainGamePage";
 import PostGamePage from "./components/postGamePage";
 import WelcomePage from "./components/welcomePage";
 
+import { DEFAULT_WIN_NUMBER } from "./constants";
+
 import "./App.css";
 
 function App() {
   const [players, setPlayers] = useState([]);
   const [playerColors, setPlayerColors] = useState([]);
-  const [winNumber, setWinNumber] = useState(10000);
+  const [winNumber, setWinNumber] = useState(DEFAULT_WIN_NUMBER);
   const [turnScores, setTurnScores] = useState([]);
   const [totalScores, setTotalScores] = useState([]);
   const [currentPlayer, setCurrentPlayer] = useState(0);
