@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
-import { CirclePicker } from "react-color";
 
 import { DEFAULT_WIN_NUMBER } from "../constants";
 
@@ -138,7 +137,6 @@ function PlayerInput(props) {
           setPlayers={props.setPlayers}
           setPlayerColors={props.setPlayerColors}
         />
-        <CirclePicker />
       </div>
     </div>
   );
