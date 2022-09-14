@@ -2,6 +2,7 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
+import ColorPicker from "./colorPicker";
 import { DEFAULT_WIN_NUMBER } from "../constants";
 
 import "./gameSetupPage.css";
@@ -67,6 +68,9 @@ function PlayerEntry(props) {
       <span
         className="color-dot"
         style={{ backgroundColor: props.color }}
+        onClick={() => {
+          props.setCurrentPlayerColorIndex(props.index);
+        }}
       ></span>
     </div>
   );
@@ -78,10 +82,12 @@ function PlayerList(props) {
       {props.players.map((player, index) => (
         <PlayerEntry
           name={player}
+          index={index}
           key={index.toString()}
           color={props.playerColors[index]}
           players={props.players}
           playerColors={props.playerColors}
+          setCurrentPlayerColorIndex={props.setCurrentPlayerColorIndex}
           setPlayers={props.setPlayers}
           setPlayerColors={props.setPlayerColors}
         />
@@ -91,6 +97,8 @@ function PlayerList(props) {
 }
 
 function PlayerInput(props) {
+  const [currentPlayerColorIndex, setCurrentPlayerColorIndex] = useState(null);
+
   function checkPlayerNameInput() {
     const nameInput = document.getElementsByName("player-name-input")[0];
     const nameInputValue = nameInput.value;
@@ -134,7 +142,13 @@ function PlayerInput(props) {
         <PlayerList
           players={props.players}
           playerColors={props.playerColors}
+          setCurrentPlayerColorIndex={setCurrentPlayerColorIndex}
           setPlayers={props.setPlayers}
+          setPlayerColors={props.setPlayerColors}
+        />
+        <ColorPicker
+          currentPlayerColorIndex={currentPlayerColorIndex}
+          playerColors={props.playerColors}
           setPlayerColors={props.setPlayerColors}
         />
       </div>

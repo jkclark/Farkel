@@ -1,0 +1,16 @@
+.color-picker {
+  min-width: 200px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(25px, 1fr));
+  gap: 10px;
+}
+
+.color-picker-dot {
+  height: 25px;
+  width: 25px;
+  border-radius: 50%;
+}
+
+.disabled-color-dot {
+  opacity: 30%;
+}
