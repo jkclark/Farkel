@@ -133,46 +133,39 @@ function OGGameSetupPage(props) {
 }
 */
 
-function GameSetupPage(props) {
-  function WinNumberInput() {
-    // THIS IS NOT WORKING RIGHT NOW BECAUSE
-    // after we interact affect state (seems like?) in another part
-    // of the GameSetupPage component, this component is getting re-rendered,
-    // resetting the value to 10,000.
-    const [localWinNumber, setLocalWinNumber] = useState(
-      DEFAULT_WIN_NUMBER.toString()
-    );
-    function checkWinNumberInput(event) {
-      const winNumber = event.target.value;
+function WinNumberInput(props) {
+  function checkWinNumberInput(event) {
+    const winNumber = event.target.value;
 
-      const allowedChars = [...Array(10).keys()].map((x) => x.toString());
-      allowedChars.push(null);
-      if (localWinNumber === "") {
-        // If input is empty, do not allow 0
-        allowedChars.shift();
-      }
-
-      if (allowedChars.includes(event.nativeEvent.data)) {
-        setLocalWinNumber(winNumber);
-      }
+    const allowedChars = [...Array(10).keys()].map((x) => x.toString());
+    allowedChars.push(null);
+    if (props.localWinNumber === "") {
+      // If input is empty, do not allow 0
+      allowedChars.shift();
     }
 
-    return (
-      <div>
-        <div className="win-number-input-stack">
-          <label htmlFor="win-number-input">Points required to win: </label>
-          <input
-            type="text"
-            className="form-control"
-            name="win-number-input"
-            value={localWinNumber}
-            onInput={checkWinNumberInput}
-          ></input>
-        </div>
-      </div>
-    );
+    if (allowedChars.includes(event.nativeEvent.data)) {
+      props.setLocalWinNumber(winNumber);
+    }
   }
 
+  return (
+    <div>
+      <div className="win-number-input-stack">
+        <label htmlFor="win-number-input">Points required to win: </label>
+        <input
+          type="text"
+          className="form-control"
+          name="win-number-input"
+          value={props.localWinNumber}
+          onInput={checkWinNumberInput}
+        ></input>
+      </div>
+    </div>
+  );
+}
+
+function GameSetupPage(props) {
   function PlayerEntry(playerEntryProps) {
     function deletePlayer() {
       // Copy lists
@@ -288,11 +281,18 @@ function GameSetupPage(props) {
     document.getElementById("main-game-page").style.display = "flex";
   }
 
+  const [localWinNumber, setLocalWinNumber] = useState(
+    DEFAULT_WIN_NUMBER.toString()
+  );
+
   return (
     <Container id="game-setup">
       <div id="game-setup-stack">
         <h1>Game Setup</h1>
-        <WinNumberInput />
+        <WinNumberInput
+          localWinNumber={localWinNumber}
+          setLocalWinNumber={setLocalWinNumber}
+        />
         <PlayerInput />
         <Button disabled={props.players.length <= 0} onClick={startGame}>
           Start
