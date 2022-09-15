@@ -49,6 +49,7 @@ export function RandomizeColorsButton(props) {
 
 function ColorDot(props) {
   function setPlayerColor() {
+    // TODO: Ask question on SO about why this doesn't work
     // Why does this not work?
     // props.setPlayerColors(
     //   [...props.playerColors].splice(

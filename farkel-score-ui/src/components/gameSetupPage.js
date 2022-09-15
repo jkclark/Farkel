@@ -44,19 +44,26 @@ function PlayerEntry(props) {
     // Copy lists
     const newPlayers = [...props.players];
     const newPlayerColors = [...props.playerColors];
+    const newDisabledColors = [...props.disabledColors];
 
     // Find index of player in props.players
     const index = props.players.indexOf(props.name);
 
-    // Remove player and color from lists
     if (index > -1) {
+      // Enable color in disabled-color list
+      newDisabledColors[INITIAL_COLORS.indexOf(newPlayerColors[index])] = false;
+
+      // Remove player from player list
       newPlayers.splice(index, 1);
+
+      // Remove color from player-color list
       newPlayerColors.splice(index, 1);
     }
 
     // Set props
     props.setPlayers(newPlayers);
     props.setPlayerColors(newPlayerColors);
+    props.setDisabledColors(newDisabledColors);
   }
 
   return (
@@ -81,6 +88,7 @@ function PlayerList(props) {
     <div className="player-list">
       {props.players.map((player, index) => (
         <PlayerEntry
+          disabledColors={props.disabledColors}
           name={player}
           index={index}
           key={index.toString()}
@@ -88,6 +96,7 @@ function PlayerList(props) {
           players={props.players}
           playerColors={props.playerColors}
           setCurrentPlayerColorIndex={props.setCurrentPlayerColorIndex}
+          setDisabledColors={props.setDisabledColors}
           setPlayers={props.setPlayers}
           setPlayerColors={props.setPlayerColors}
         />
@@ -123,7 +132,9 @@ function PlayerInput(props) {
     nameInput.value = "";
   }
 
-  function handleAddPlayerClick() {
+  function handleAddPlayerClick(event) {
+    event.preventDefault(); // Page refreshes if we don't do this
+
     if (checkPlayerNameInput()) {
       addPlayer();
     }
@@ -131,15 +142,17 @@ function PlayerInput(props) {
 
   return (
     <div className="player-input-stack">
-      <div className="title-and-input-stack">
-        <h4>Players</h4>
+      <form action="" className="title-and-input-stack">
         <input
           type="text"
+          className="form-control"
           name="player-name-input"
           placeholder="Player name"
         ></input>
-        <Button onClick={handleAddPlayerClick}>Add Player</Button>
-      </div>
+        <Button type="submit" onClick={handleAddPlayerClick}>
+          Add Player
+        </Button>
+      </form>
       <hr />
       <div className="player-list-and-color-stack">
         <RandomizeColorsButton
@@ -149,9 +162,11 @@ function PlayerInput(props) {
           setPlayerColors={props.setPlayerColors}
         />
         <PlayerList
+          disabledColors={disabledColors}
           players={props.players}
           playerColors={props.playerColors}
           setCurrentPlayerColorIndex={setCurrentPlayerColorIndex}
+          setDisabledColors={setDisabledColors}
           setPlayers={props.setPlayers}
           setPlayerColors={props.setPlayerColors}
         />
@@ -184,6 +199,8 @@ function GameSetupPage(props) {
       parseInt(document.getElementsByName("win-number-input")[0].value) ||
         DEFAULT_WIN_NUMBER
     );
+
+    // TODO: Set player colors if any are still default
 
     // Hide/Show elements
     document.getElementById("game-setup").style.display = "none";

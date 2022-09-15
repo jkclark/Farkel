@@ -12,25 +12,15 @@
   margin-top: 5%;
 }
 
-#player-input-label {
-  margin-right: 0.5rem;
-}
-
-#player-tags {
-  display: flex;
-  flex-wrap: wrap;
-}
-
-.player-tag {
-  margin: 0.5rem;
-  padding: 3px 10px;
-}
-
 /**************************/
 
 .win-number-input-stack {
   display: flex;
   gap: 2em;
+}
+
+.win-number-input-stack label {
+  white-space: nowrap;
 }
 
 .player-input-stack {
