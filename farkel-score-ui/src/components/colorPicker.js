@@ -1,27 +1,51 @@
-import { useState } from "react";
+import Button from "react-bootstrap/Button";
+
+import { INITIAL_COLORS } from "../constants";
 
 import "./colorPicker.css";
 
-const INITIAL_COLORS = [
-  "#f44336",
-  "#e91e63",
-  "#9c27b0",
-  "#673ab7",
-  "#3f51b5",
-  "#2196f3",
-  "#03a9f4",
-  "#00bcd4",
-  "#009688",
-  "#4caf50",
-  "#8bc34a",
-  "#cddc39",
-  "#ffeb3b",
-  "#ffc107",
-  "#ff9800",
-  "#ff5722",
-  "#795548",
-  "#607d8b",
-];
+export function RandomizeColorsButton(props) {
+  // Taken from: https://stackoverflow.com/a/2450976/3801865
+  function shuffle(array) {
+    let currentIndex = array.length,
+      randomIndex;
+
+    // While there remain elements to shuffle.
+    while (currentIndex !== 0) {
+      // Pick a remaining element.
+      randomIndex = Math.floor(Math.random() * currentIndex);
+      currentIndex--;
+
+      // And swap it with the current element.
+      [array[currentIndex], array[randomIndex]] = [
+        array[randomIndex],
+        array[currentIndex],
+      ];
+    }
+
+    return array;
+  }
+
+  function randomizePlayerColors() {
+    // Get colors to use randomly from color array
+    const shuffledColors = shuffle([...INITIAL_COLORS]).slice(
+      0,
+      props.playerColors.length
+    );
+
+    // Give each player a random color
+    props.setPlayerColors(shuffledColors);
+
+    // Mark used colors as disabled
+    const newDisabledColors = Array(INITIAL_COLORS.length).fill(false);
+    shuffledColors.forEach((color) => {
+      newDisabledColors[INITIAL_COLORS.indexOf(color)] = true;
+    });
+    props.setDisabledColors(newDisabledColors);
+  }
+
+  return <Button onClick={randomizePlayerColors}>Randomize</Button>;
+}
 
 function ColorDot(props) {
   function setPlayerColor() {
@@ -34,6 +58,7 @@ function ColorDot(props) {
     //   )
     // );
 
+    // TODO: Look into React usereducer to handle this complex state update
     const newPlayerColors = [...props.playerColors];
     newPlayerColors.splice(props.currentPlayerColorIndex, 1, props.color);
     props.setPlayerColors(newPlayerColors);
@@ -76,22 +101,18 @@ function ColorDot(props) {
 }
 
 function ColorPicker(props) {
-  const [disabledColors, setDisabledColors] = useState(
-    Array(INITIAL_COLORS.length).fill(false)
-  );
-
   return (
     <div className="color-picker">
       {INITIAL_COLORS.map((color, index) => (
         <ColorDot
           color={color}
           currentPlayerColorIndex={props.currentPlayerColorIndex}
-          disabled={disabledColors[index]}
-          disabledColors={disabledColors}
+          disabled={props.disabledColors[index]}
+          disabledColors={props.disabledColors}
           index={index}
           key={index}
           playerColors={props.playerColors}
-          setDisabledColors={setDisabledColors}
+          setDisabledColors={props.setDisabledColors}
           setPlayerColors={props.setPlayerColors}
         />
       ))}

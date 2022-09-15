@@ -2,8 +2,8 @@ import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 
-import ColorPicker from "./colorPicker";
-import { DEFAULT_WIN_NUMBER } from "../constants";
+import ColorPicker, { RandomizeColorsButton } from "./colorPicker";
+import { DEFAULT_WIN_NUMBER, INITIAL_COLORS } from "../constants";
 
 import "./gameSetupPage.css";
 
@@ -98,6 +98,9 @@ function PlayerList(props) {
 
 function PlayerInput(props) {
   const [currentPlayerColorIndex, setCurrentPlayerColorIndex] = useState(null);
+  const [disabledColors, setDisabledColors] = useState(
+    Array(INITIAL_COLORS.length).fill(false)
+  );
 
   function checkPlayerNameInput() {
     const nameInput = document.getElementsByName("player-name-input")[0];
@@ -139,6 +142,12 @@ function PlayerInput(props) {
       </div>
       <hr />
       <div className="player-list-and-color-stack">
+        <RandomizeColorsButton
+          disabledColors={disabledColors}
+          playerColors={props.playerColors}
+          setDisabledColors={setDisabledColors}
+          setPlayerColors={props.setPlayerColors}
+        />
         <PlayerList
           players={props.players}
           playerColors={props.playerColors}
@@ -148,7 +157,9 @@ function PlayerInput(props) {
         />
         <ColorPicker
           currentPlayerColorIndex={currentPlayerColorIndex}
+          disabledColors={disabledColors}
           playerColors={props.playerColors}
+          setDisabledColors={setDisabledColors}
           setPlayerColors={props.setPlayerColors}
         />
       </div>
