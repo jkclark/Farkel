@@ -6,7 +6,7 @@ import "./welcomePage.css";
 function WelcomePage() {
   function startGame() {
     document.getElementById("welcome").style.display = "none";
-    document.getElementById("game-setup").style.display = "flex";
+    document.getElementById("game-setup").style.display = "grid";
   }
 
   return (

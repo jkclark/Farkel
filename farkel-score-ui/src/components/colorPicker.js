@@ -1,6 +1,5 @@
-import Button from "react-bootstrap/Button";
-
 import { INITIAL_COLORS } from "../constants";
+import dieIcon from "../img/dice-5.svg";
 
 import "./colorPicker.css";
 
@@ -44,21 +43,18 @@ export function RandomizeColorsButton(props) {
     props.setDisabledColors(newDisabledColors);
   }
 
-  return <Button onClick={randomizePlayerColors}>Randomize</Button>;
+  return (
+    <img
+      src={dieIcon}
+      className="randomize-colors-icon"
+      onClick={randomizePlayerColors}
+      alt="Randomize"
+    ></img>
+  );
 }
 
 function ColorDot(props) {
   function setPlayerColor() {
-    // TODO: Ask question on SO about why this doesn't work
-    // Why does this not work?
-    // props.setPlayerColors(
-    //   [...props.playerColors].splice(
-    //     props.currentPlayerColorIndex,
-    //     1,
-    //     props.color
-    //   )
-    // );
-
     // TODO: Look into React usereducer to handle this complex state update
     const newPlayerColors = [...props.playerColors];
     newPlayerColors.splice(props.currentPlayerColorIndex, 1, props.color);

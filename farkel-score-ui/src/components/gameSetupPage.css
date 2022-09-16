@@ -1,15 +1,9 @@
 #game-setup {
   display: none;
-  justify-content: center;
-}
-
-#game-setup-stack {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2rem;
 
   margin-top: 5%;
+
+  grid-template-rows: 2fr 1fr max-content 1fr;
 }
 
 /**************************/
@@ -23,32 +17,33 @@
   white-space: nowrap;
 }
 
-.player-input-stack {
-  display: flex;
-  flex-direction: column;
+.win-number-input-stack input {
+  width: 6em;
 }
 
-.title-and-input-stack {
-  display: flex;
-}
-
-.player-list-and-color-stack {
-  display: flex;
-  justify-content: space-around;
-}
-
-.player-list {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5em;
-}
-
+/*
 .player-entry {
   display: flex;
   justify-content: space-between;
   gap: 2em;
+}
+*/
 
-  /* min-width: 300px; */
+.player-input-table {
+  width: max-content
+}
+
+.player-input-table-delete-col {
+  width: 1em;
+}
+
+.delete-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.delete-icon:hover {
+  cursor: pointer;
 }
 
 .color-dot {

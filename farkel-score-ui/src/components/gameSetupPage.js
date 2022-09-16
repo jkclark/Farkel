@@ -1,9 +1,11 @@
 import { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
+import Table from "react-bootstrap/Table";
 
-import ColorPicker, { RandomizeColorsButton } from "./colorPicker";
 import { DEFAULT_WIN_NUMBER, INITIAL_COLORS } from "../constants";
+import deleteIcon from "../img/x.svg";
+import ColorPicker, { RandomizeColorsButton } from "./colorPicker";
 
 import "./gameSetupPage.css";
 
@@ -67,41 +69,70 @@ function PlayerEntry(props) {
   }
 
   return (
-    <div className="player-entry">
-      <Button variant="danger" onClick={deletePlayer}>
-        Delete
-      </Button>
-      <span>{props.name}</span>
-      <span
-        className="color-dot"
-        style={{ backgroundColor: props.color }}
-        onClick={() => {
-          props.setCurrentPlayerColorIndex(props.index);
-        }}
-      ></span>
-    </div>
+    <tr>
+      <td>
+        <img
+          src={deleteIcon}
+          className="delete-icon"
+          onClick={deletePlayer}
+          alt="Delete"
+        ></img>
+      </td>
+      <td>{props.name}</td>
+      <td>
+        <div
+          className="color-dot"
+          style={{ backgroundColor: props.color }}
+          onClick={() => {
+            props.setCurrentPlayerColorIndex(props.index);
+          }}
+        ></div>
+      </td>
+    </tr>
   );
 }
 
 function PlayerList(props) {
   return (
-    <div className="player-list">
-      {props.players.map((player, index) => (
-        <PlayerEntry
-          disabledColors={props.disabledColors}
-          name={player}
-          index={index}
-          key={index.toString()}
-          color={props.playerColors[index]}
-          players={props.players}
-          playerColors={props.playerColors}
-          setCurrentPlayerColorIndex={props.setCurrentPlayerColorIndex}
-          setDisabledColors={props.setDisabledColors}
-          setPlayers={props.setPlayers}
-          setPlayerColors={props.setPlayerColors}
-        />
-      ))}
-    </div>
+    <Table borderless className="player-input-table">
+      <colgroup>
+        <col span="1" className="player-input-table-delete-col"></col>
+        <col span="1"></col>
+        <col span="1"></col>
+      </colgroup>
+      <thead>
+        <tr>
+          <th></th>
+          <th>Player</th>
+          <th>
+            Color
+            <RandomizeColorsButton
+              disabledColors={props.disabledColors}
+              playerColors={props.playerColors}
+              setDisabledColors={props.setDisabledColors}
+              setPlayerColors={props.setPlayerColors}
+            />
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        {props.players.map((player, index) => (
+          <PlayerEntry
+            disabledColors={props.disabledColors}
+            name={player}
+            index={index}
+            key={index.toString()}
+            color={props.playerColors[index]}
+            players={props.players}
+            playerColors={props.playerColors}
+            setCurrentPlayerColorIndex={props.setCurrentPlayerColorIndex}
+            setDisabledColors={props.setDisabledColors}
+            setPlayers={props.setPlayers}
+            setPlayerColors={props.setPlayerColors}
+          />
+        ))}
+      </tbody>
+    </Table>
   );
 }
 
@@ -142,42 +173,36 @@ function PlayerInput(props) {
 
   return (
     <div className="player-input-stack">
-      <form action="" className="title-and-input-stack">
-        <input
-          type="text"
-          className="form-control"
-          name="player-name-input"
-          placeholder="Player name"
-        ></input>
-        <Button type="submit" onClick={handleAddPlayerClick}>
-          Add Player
-        </Button>
-      </form>
-      <hr />
-      <div className="player-list-and-color-stack">
-        <RandomizeColorsButton
-          disabledColors={disabledColors}
-          playerColors={props.playerColors}
-          setDisabledColors={setDisabledColors}
-          setPlayerColors={props.setPlayerColors}
-        />
-        <PlayerList
-          disabledColors={disabledColors}
-          players={props.players}
-          playerColors={props.playerColors}
-          setCurrentPlayerColorIndex={setCurrentPlayerColorIndex}
-          setDisabledColors={setDisabledColors}
-          setPlayers={props.setPlayers}
-          setPlayerColors={props.setPlayerColors}
-        />
-        <ColorPicker
-          currentPlayerColorIndex={currentPlayerColorIndex}
-          disabledColors={disabledColors}
-          playerColors={props.playerColors}
-          setDisabledColors={setDisabledColors}
-          setPlayerColors={props.setPlayerColors}
-        />
+      <div className="player-input-header">
+        <form action="" className="player-name-input-stack">
+          <input
+            type="text"
+            className="form-control"
+            name="player-name-input"
+            placeholder="Player name"
+          ></input>
+          <Button type="submit" onClick={handleAddPlayerClick}>
+            Add Player
+          </Button>
+        </form>
       </div>
+      <div className="player-input-body"></div>
+      <PlayerList
+        disabledColors={disabledColors}
+        players={props.players}
+        playerColors={props.playerColors}
+        setCurrentPlayerColorIndex={setCurrentPlayerColorIndex}
+        setDisabledColors={setDisabledColors}
+        setPlayers={props.setPlayers}
+        setPlayerColors={props.setPlayerColors}
+      />
+      <ColorPicker
+        currentPlayerColorIndex={currentPlayerColorIndex}
+        disabledColors={disabledColors}
+        playerColors={props.playerColors}
+        setDisabledColors={setDisabledColors}
+        setPlayerColors={props.setPlayerColors}
+      />
     </div>
   );
 }
@@ -209,22 +234,20 @@ function GameSetupPage(props) {
 
   return (
     <Container id="game-setup">
-      <div id="game-setup-stack">
-        <h1>Game Setup</h1>
-        <WinNumberInput
-          localWinNumber={localWinNumber}
-          setLocalWinNumber={setLocalWinNumber}
-        />
-        <PlayerInput
-          players={props.players}
-          playerColors={props.playerColors}
-          setPlayers={props.setPlayers}
-          setPlayerColors={props.setPlayerColors}
-        />
-        <Button disabled={props.players.length <= 0} onClick={startGame}>
-          Start
-        </Button>
-      </div>
+      <h1>Game Setup</h1>
+      <WinNumberInput
+        localWinNumber={localWinNumber}
+        setLocalWinNumber={setLocalWinNumber}
+      />
+      <PlayerInput
+        players={props.players}
+        playerColors={props.playerColors}
+        setPlayers={props.setPlayers}
+        setPlayerColors={props.setPlayerColors}
+      />
+      <Button disabled={props.players.length <= 0} onClick={startGame}>
+        Start
+      </Button>
     </Container>
   );
 }

@@ -1,3 +1,12 @@
+.randomize-colors-icon {
+  width: 1em;
+  height: 1em;
+}
+
+.randomize-colors-icon:hover {
+  cursor: pointer;
+}
+
 .color-picker {
   min-width: 200px;
   display: grid;
