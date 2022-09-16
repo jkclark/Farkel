@@ -3,7 +3,7 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Table from "react-bootstrap/Table";
 
-import { DEFAULT_WIN_NUMBER, INITIAL_COLORS } from "../constants";
+import { DEFAULT_WIN_NUMBER, INITIAL_COLORS, MAX_PLAYERS } from "../constants";
 import deleteIcon from "../img/x.svg";
 import ColorPicker, { RandomizeColorsButton } from "./colorPicker";
 
@@ -166,7 +166,7 @@ function PlayerInput(props) {
   function handleAddPlayerClick(event) {
     event.preventDefault(); // Page refreshes if we don't do this
 
-    if (checkPlayerNameInput()) {
+    if (props.players.length < MAX_PLAYERS && checkPlayerNameInput()) {
       addPlayer();
     }
   }

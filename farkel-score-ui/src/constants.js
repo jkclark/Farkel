@@ -1,6 +1,8 @@
 export const DEFAULT_WIN_NUMBER = 10_000;
 // TODO: Add "got in" and "did not get in" values
 
+export const MAX_PLAYERS = 8;
+
 export const INITIAL_COLORS = [
   "#f44336",
   "#e91e63",
