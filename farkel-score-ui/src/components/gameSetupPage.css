@@ -1,33 +1,30 @@
 #game-setup {
   display: none;
 
+  width: max-content;
+
   margin-top: 5%;
 
-  grid-template-rows: 2fr 1fr max-content 1fr;
+  /* grid-template-rows: 2fr 1fr 1fr max-content 1fr; */
+  gap: 0.5em;
 }
 
 /**************************/
 
-.win-number-input-stack {
+.player-name-input-stack {
   display: flex;
-  gap: 2em;
+  gap: 0.5em;
+  justify-content: space-around;
 }
 
-.win-number-input-stack label {
-  white-space: nowrap;
+.player-name-input {
+  width: 8em;
 }
 
-.win-number-input-stack input {
-  width: 6em;
-}
-
-/*
-.player-entry {
+.player-input-body {
   display: flex;
-  justify-content: space-between;
-  gap: 2em;
+  gap: 5em;
 }
-*/
 
 .player-input-table {
   width: max-content
@@ -35,6 +32,15 @@
 
 .player-input-table-delete-col {
   width: 1em;
+}
+
+.player-entry {
+  height: max-content;
+}
+
+td.player-input-table-color-cell {
+  display: flex;
+  justify-content: center;
 }
 
 .delete-icon {
@@ -47,7 +53,34 @@
 }
 
 .color-dot {
-  height: 25px;
-  width: 25px;
+  position: relative;
+  height: 1.5em;
+  width: 1.5em;
   border-radius: 50%;
+}
+
+.color-dot:hover .color-picker {
+  visibility: visible;
+}
+
+.game-setup-footer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.win-number-input-stack {
+  display: flex;
+  gap: 0.5em;
+}
+
+.win-number-input-stack label {
+  white-space: nowrap;
+}
+
+.win-number-input-stack input {
+  width: 6em;
+}
+
+.start-button {
+  width: max-content;
 }
