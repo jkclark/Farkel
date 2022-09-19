@@ -26,8 +26,8 @@
   gap: 5em;
 }
 
-.player-input-table {
-  width: max-content
+.player-list-table {
+  text-align: center;
 }
 
 .player-input-table-delete-col {
@@ -35,12 +35,7 @@
 }
 
 .player-entry {
-  height: max-content;
-}
-
-td.player-input-table-color-cell {
-  display: flex;
-  justify-content: center;
+  height: 2.5em;
 }
 
 .delete-icon {
@@ -54,6 +49,7 @@ td.player-input-table-color-cell {
 
 .color-dot {
   position: relative;
+  margin: auto;
   height: 1.5em;
   width: 1.5em;
   border-radius: 50%;
@@ -66,10 +62,12 @@ td.player-input-table-color-cell {
 .game-setup-footer {
   display: flex;
   justify-content: space-between;
+  gap: 2em;
 }
 
 .win-number-input-stack {
   display: flex;
+  align-items: center;
   gap: 0.5em;
 }
 

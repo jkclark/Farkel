@@ -9,36 +9,6 @@ import ColorPicker, { RandomizeColorsButton } from "./colorPicker";
 
 import "./gameSetupPage.css";
 
-function WinNumberInput(props) {
-  function checkWinNumberInput(event) {
-    const winNumber = event.target.value;
-
-    const allowedChars = [...Array(10).keys()].map((x) => x.toString());
-    allowedChars.push(null);
-    if (props.localWinNumber === "") {
-      // If input is empty, do not allow 0
-      allowedChars.shift();
-    }
-
-    if (allowedChars.includes(event.nativeEvent.data)) {
-      props.setLocalWinNumber(winNumber);
-    }
-  }
-
-  return (
-    <div className="win-number-input-stack">
-      <label htmlFor="win-number-input">Points required to win: </label>
-      <input
-        type="text"
-        className="form-control"
-        name="win-number-input"
-        value={props.localWinNumber}
-        onInput={checkWinNumberInput}
-      ></input>
-    </div>
-  );
-}
-
 function PlayerEntry(props) {
   function deletePlayer() {
     // Copy lists
@@ -87,10 +57,11 @@ function PlayerEntry(props) {
         ></img>
       </td>
       <td>{props.name}</td>
-      <td className="player-input-table-color-cell">
+      <td>
         <div
           className="color-dot"
           style={{ backgroundColor: props.color }}
+          // TODO: I think this makes this feature unusable on mobile
           onMouseOver={() => {
             props.setCurrentPlayerColorIndex(props.index);
           }}
@@ -112,7 +83,7 @@ function PlayerList(props) {
   const [currentPlayerColorIndex, setCurrentPlayerColorIndex] = useState(null);
 
   return (
-    <Table className="player-input-table">
+    <Table className="player-list-table">
       <colgroup>
         <col span="1" className="player-input-table-delete-col"></col>
         <col span="1"></col>
@@ -212,7 +183,11 @@ function PlayerInput(props) {
           name="player-name-input"
           placeholder="Player name"
         ></input>
-        <Button type="submit" onClick={handleAddPlayerClick}>
+        <Button
+          type="submit"
+          disabled={props.players.length >= MAX_PLAYERS}
+          onClick={handleAddPlayerClick}
+        >
           Add Player
         </Button>
       </form>
@@ -227,6 +202,41 @@ function PlayerInput(props) {
         />
       </div>
     </>
+  );
+}
+
+function WinNumberInput(props) {
+  function checkWinNumberInput(event) {
+    // Get rid of the commas inserted by toLocaleString
+    const winNumber = event.target.value.replaceAll(",", "");
+
+    const allowedChars = [...Array(10).keys()].map((x) => x.toString());
+    allowedChars.push(null);
+    if (props.localWinNumber === "") {
+      // If input is empty, do not allow 0
+      allowedChars.shift();
+    }
+
+    if (allowedChars.includes(event.nativeEvent.data)) {
+      props.setLocalWinNumber(winNumber);
+    }
+  }
+
+  return (
+    <div className="win-number-input-stack">
+      <label htmlFor="win-number-input">Points required to win: </label>
+      <input
+        type="text"
+        className="form-control"
+        name="win-number-input"
+        value={
+          props.localWinNumber === ""
+            ? ""
+            : parseInt(props.localWinNumber).toLocaleString()
+        }
+        onInput={checkWinNumberInput}
+      ></input>
+    </div>
   );
 }
 
