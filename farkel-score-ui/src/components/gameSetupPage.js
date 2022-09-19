@@ -110,9 +110,6 @@ function PlayerEntry(props) {
 
 function PlayerList(props) {
   const [currentPlayerColorIndex, setCurrentPlayerColorIndex] = useState(null);
-  const [disabledColors, setDisabledColors] = useState(
-    Array(INITIAL_COLORS.length).fill(false)
-  );
 
   return (
     <Table className="player-input-table">
@@ -142,7 +139,7 @@ function PlayerList(props) {
           .map((_, index) => (
             <PlayerEntry
               currentPlayerColorIndex={currentPlayerColorIndex}
-              disabledColors={disabledColors}
+              disabledColors={props.disabledColors}
               name={props.players[index]}
               index={index}
               key={index.toString()}
@@ -150,7 +147,7 @@ function PlayerList(props) {
               players={props.players}
               playerColors={props.playerColors}
               setCurrentPlayerColorIndex={setCurrentPlayerColorIndex}
-              setDisabledColors={setDisabledColors}
+              setDisabledColors={props.setDisabledColors}
               setPlayers={props.setPlayers}
               setPlayerColors={props.setPlayerColors}
             />
@@ -161,6 +158,10 @@ function PlayerList(props) {
 }
 
 function PlayerInput(props) {
+  const [disabledColors, setDisabledColors] = useState(
+    Array(INITIAL_COLORS.length).fill(false)
+  );
+
   function checkPlayerNameInput() {
     const nameInput = document.getElementsByName("player-name-input")[0];
     const nameInputValue = nameInput.value;
@@ -177,8 +178,20 @@ function PlayerInput(props) {
 
   function addPlayer() {
     const nameInput = document.getElementsByName("player-name-input")[0];
+
+    // Give player a color
+    const newDisabledColors = [...disabledColors];
+    const newPlayerColorIndex = newDisabledColors.indexOf(false);
+    newDisabledColors[newPlayerColorIndex] = true;
+
+    // Set props
     props.setPlayers([...props.players, nameInput.value]);
-    props.setPlayerColors([...props.playerColors, "#ddd"]);
+    props.setPlayerColors([
+      ...props.playerColors,
+      INITIAL_COLORS[newPlayerColorIndex],
+    ]);
+    setDisabledColors(newDisabledColors);
+
     nameInput.value = "";
   }
 
@@ -205,8 +218,10 @@ function PlayerInput(props) {
       </form>
       <div className="player-input-body">
         <PlayerList
+          disabledColors={disabledColors}
           players={props.players}
           playerColors={props.playerColors}
+          setDisabledColors={setDisabledColors}
           setPlayers={props.setPlayers}
           setPlayerColors={props.setPlayerColors}
         />

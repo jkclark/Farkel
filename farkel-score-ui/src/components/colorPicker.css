@@ -10,6 +10,13 @@
 .color-picker {
   visibility: hidden;
 
+  position: absolute;
+  left: 99%;
+  /* Need to style so that this can appear to be separated
+     from color dot but still work with hover.
+   */
+  /* left: 200%; */
+
   min-width: 200px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(25px, 1fr));
