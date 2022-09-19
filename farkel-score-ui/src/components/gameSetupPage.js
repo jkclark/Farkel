@@ -91,7 +91,7 @@ function PlayerEntry(props) {
         <div
           className="color-dot"
           style={{ backgroundColor: props.color }}
-          onClick={() => {
+          onMouseOver={() => {
             props.setCurrentPlayerColorIndex(props.index);
           }}
         >
