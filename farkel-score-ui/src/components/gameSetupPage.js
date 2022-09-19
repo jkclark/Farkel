@@ -54,6 +54,7 @@ function PlayerEntry(props) {
           className="delete-icon"
           onClick={deletePlayer}
           alt="Delete"
+          title="Remove player"
         ></img>
       </td>
       <td>{props.name}</td>
