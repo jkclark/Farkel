@@ -95,7 +95,9 @@ function PlayerList(props) {
           <th></th>
           <th>Player</th>
           <th>
-            Color
+            <span className="player-input-table-color-col-header-text">
+              Color
+            </span>
             <RandomizeColorsButton
               disabledColors={props.disabledColors}
               playerColors={props.playerColors}

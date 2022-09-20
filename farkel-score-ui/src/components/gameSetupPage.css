@@ -34,6 +34,10 @@
   width: 1em;
 }
 
+.player-input-table-color-col-header-text {
+  vertical-align: middle;
+}
+
 .player-entry {
   height: 2.5em;
 }
