@@ -259,8 +259,11 @@ function GameSetupPage(props) {
 
     // Save the points needed to win
     props.setWinNumber(
-      parseInt(document.getElementsByName("win-number-input")[0].value) ||
-        DEFAULT_WIN_NUMBER
+      parseInt(
+        document
+          .getElementsByName("win-number-input")[0]
+          .value.replaceAll(",", "")
+      ) || DEFAULT_WIN_NUMBER
     );
 
     // TODO: Set player colors if any are still default

@@ -28,7 +28,7 @@ function MainGamePage(props) {
       <div id="main-game-page-stack">
         {gameWinner !== -1 && <Button onClick={goToPostGame}>See stats</Button>}
         {gameWinner !== -1 && <h4>{props.players[gameWinner]} wins!</h4>}
-        <h4>Points to win: {props.winNumber}</h4>
+        <h4>Points to win: {props.winNumber.toLocaleString()}</h4>
         {gameWinner === -1 && (
           <TurnInput
             players={props.players}
