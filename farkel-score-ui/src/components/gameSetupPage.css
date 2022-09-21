@@ -59,8 +59,17 @@
   border-radius: 50%;
 }
 
-.color-dot:hover .color-picker {
+.color-dot:hover .color-picker-hover-gap {
   visibility: visible;
+}
+
+.color-picker-hover-gap {
+  visibility: hidden;
+  display: inline-block;
+  position: absolute;
+  transform: translateY(calc(-50% + 12px));
+  padding-left: 20px;
+  left: 75%;
 }
 
 .game-setup-footer {

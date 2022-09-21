@@ -88,9 +88,7 @@ function ColorDot(props) {
 
   return (
     <span
-      className={
-        "color-picker-dot" + (props.disabled ? " disabled-color-dot" : "")
-      }
+      className={"color-dot" + (props.disabled ? " disabled-color-dot" : "")}
       style={{ backgroundColor: props.color }}
       onClick={handleColorDotClick}
     ></span>

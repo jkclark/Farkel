@@ -67,13 +67,15 @@ function PlayerEntry(props) {
             props.setCurrentPlayerColorIndex(props.index);
           }}
         >
-          <ColorPicker
-            currentPlayerColorIndex={props.currentPlayerColorIndex}
-            disabledColors={props.disabledColors}
-            playerColors={props.playerColors}
-            setDisabledColors={props.setDisabledColors}
-            setPlayerColors={props.setPlayerColors}
-          />
+          <div className="color-picker-hover-gap">
+            <ColorPicker
+              currentPlayerColorIndex={props.currentPlayerColorIndex}
+              disabledColors={props.disabledColors}
+              playerColors={props.playerColors}
+              setDisabledColors={props.setDisabledColors}
+              setPlayerColors={props.setPlayerColors}
+            />
+          </div>
         </div>
       </td>
     </tr>
