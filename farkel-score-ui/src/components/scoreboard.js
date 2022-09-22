@@ -177,8 +177,7 @@ function Scoreboard(props) {
                   : { background: getGradientStyle(score) }
               }
             >
-              <b>{score}</b> ({score > props.winNumber ? "+" : "-"}
-              {Math.abs(props.winNumber - score)})
+              <b>{score}</b>
             </td>
           ))}
         </tr>
