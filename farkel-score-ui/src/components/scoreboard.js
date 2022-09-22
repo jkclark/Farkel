@@ -52,10 +52,30 @@ function Scoreboard(props) {
     return props.gameWinner !== -1 && props.gameWinner === index;
   }
 
-  function getGradientStyle(score) {
+  // Taken from https://stackoverflow.com/a/5624139/3801865
+  function hexToRgb(hex) {
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result
+      ? {
+          r: parseInt(result[1], 16),
+          g: parseInt(result[2], 16),
+          b: parseInt(result[3], 16),
+        }
+      : null;
+  }
+
+  function getGradientStyle(score, color) {
+    console.log(color);
     const scorePercentage = (score * 100) / props.winNumber;
+    const rgb = hexToRgb(color);
     return (
-      "linear-gradient(to right, rgba(0, 0, 0, 0.25) " +
+      "linear-gradient(to top, rgba(" +
+      rgb.r +
+      ", " +
+      rgb.g +
+      ", " +
+      rgb.b +
+      ", 0.25) " +
       scorePercentage +
       "%, white " +
       scorePercentage +
@@ -100,19 +120,19 @@ function Scoreboard(props) {
           leaderIndices.push(playerIndex);
         }
       }
-
-      return leaderIndices;
     }
 
     // At least one person is in, so calculate the leader(s) normally
-    let max = Number.NEGATIVE_INFINITY;
+    else {
+      let max = Number.NEGATIVE_INFINITY;
 
-    for (let index = 0; index < props.totalScores.length; index++) {
-      if (props.totalScores[index] > max) {
-        max = props.totalScores[index];
-        leaderIndices = [index];
-      } else if (props.totalScores[index] === max) {
-        leaderIndices.push(index);
+      for (let index = 0; index < props.totalScores.length; index++) {
+        if (props.totalScores[index] > max) {
+          max = props.totalScores[index];
+          leaderIndices = [index];
+        } else if (props.totalScores[index] === max) {
+          leaderIndices.push(index);
+        }
       }
     }
 
@@ -125,7 +145,18 @@ function Scoreboard(props) {
   }
 
   return (
-    <Table striped bordered>
+    <Table bordered>
+      <colgroup>
+        <col></col>
+        {props.totalScores.map((score, index) => (
+          <col
+            key={index}
+            style={{
+              background: getGradientStyle(score, props.playerColors[index]),
+            }}
+          ></col>
+        ))}
+      </colgroup>
       <thead>
         <tr>
           <th>Turn #</th>
@@ -149,15 +180,21 @@ function Scoreboard(props) {
         {props.turnScores.map((oneTurnScores, index) => (
           <tr key={index}>
             <td>{index + 1}</td>
-            {oneTurnScores.map((score, playerIndex) => (
-              <ScoreCell
-                score={score}
-                key={playerIndex}
-                turnIndex={index}
-                playerIndex={playerIndex}
-                highlighted={shouldBeHighlighted(playerIndex)}
-              />
-            ))}
+            {Array(props.players.length)
+              .fill(0)
+              .map((_, playerIndex) => (
+                <ScoreCell
+                  score={
+                    Number.isInteger(oneTurnScores[playerIndex])
+                      ? oneTurnScores[playerIndex]
+                      : ""
+                  }
+                  key={playerIndex}
+                  turnIndex={index}
+                  playerIndex={playerIndex}
+                  highlighted={shouldBeHighlighted(playerIndex)}
+                />
+              ))}
           </tr>
         ))}
       </tbody>
@@ -170,12 +207,6 @@ function Scoreboard(props) {
             <td
               key={index}
               className={shouldBeHighlighted(index) ? winHighlightClass : ""}
-              // Only show gradient for non-winners
-              style={
-                props.gameWinner === index
-                  ? {}
-                  : { background: getGradientStyle(score) }
-              }
             >
               <b>{score}</b>
             </td>

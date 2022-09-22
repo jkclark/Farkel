@@ -30,6 +30,7 @@ function App() {
       />
       <MainGamePage
         players={players}
+        playerColors={playerColors}
         winNumber={winNumber}
         currentPlayer={currentPlayer}
         setCurrentPlayer={setCurrentPlayer}

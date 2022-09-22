@@ -44,19 +44,18 @@ function MainGamePage(props) {
             setGameWinner={setGameWinner}
           />
         )}
-        <div style={{ display: "flex" }}>
-          <Scoreboard
-            players={props.players}
-            winNumber={props.winNumber}
-            turnScores={props.turnScores}
-            totalScores={props.totalScores}
-            editingTurn={editingTurn}
-            setEditingTurn={setEditingTurn}
-            editingPlayer={editingPlayer}
-            setEditingPlayer={setEditingPlayer}
-            gameWinner={gameWinner}
-          />
-        </div>
+        <Scoreboard
+          players={props.players}
+          playerColors={props.playerColors}
+          winNumber={props.winNumber}
+          turnScores={props.turnScores}
+          totalScores={props.totalScores}
+          editingTurn={editingTurn}
+          setEditingTurn={setEditingTurn}
+          editingPlayer={editingPlayer}
+          setEditingPlayer={setEditingPlayer}
+          gameWinner={gameWinner}
+        />
       </div>
     </Container>
   );
