@@ -64,23 +64,10 @@ function Scoreboard(props) {
       : null;
   }
 
-  function getGradientStyle(score, color) {
-    console.log(color);
-    const scorePercentage = (score * 100) / props.winNumber;
+  function getGradientStyle(color) {
     const rgb = hexToRgb(color);
-    return (
-      "linear-gradient(to top, rgba(" +
-      rgb.r +
-      ", " +
-      rgb.g +
-      ", " +
-      rgb.b +
-      ", 0.25) " +
-      scorePercentage +
-      "%, white " +
-      scorePercentage +
-      "%)"
-    );
+    const rgbaColorString = `rgba(${rgb.r}, ${rgb.g}, ${rgb.b}, 0.25)`;
+    return `linear-gradient(to top, ${rgbaColorString}, ${rgbaColorString})`;
   }
 
   function getLeaderIndices() {
@@ -151,8 +138,10 @@ function Scoreboard(props) {
         {props.totalScores.map((score, index) => (
           <col
             key={index}
+            className="scoreboard-col"
             style={{
-              background: getGradientStyle(score, props.playerColors[index]),
+              backgroundImage: getGradientStyle(props.playerColors[index]),
+              backgroundSize: `100% ${(score / props.winNumber) * 100}%`,
             }}
           ></col>
         ))}

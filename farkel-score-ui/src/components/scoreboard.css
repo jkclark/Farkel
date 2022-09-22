@@ -1,3 +1,9 @@
+.scoreboard-col {
+  transition: background-size 2000ms cubic-bezier(0.65, 0, 0.35, 1);
+  background-position: bottom;
+  background-repeat: no-repeat;
+}
+
 .scoreboard-header-cell img {
   margin-left: 0.3em;
   vertical-align: sub;  /* Don't really understand why this is the only thing that works...*/
