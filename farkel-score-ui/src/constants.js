@@ -1,6 +1,10 @@
 export const DEFAULT_WIN_NUMBER = 10_000;
 // TODO: Add "got in" and "did not get in" values
 
+export const GOT_IN = -2;
+
+export const NOT_GOT_IN = -1;
+
 export const MAX_PLAYERS = 8;
 
 export const INITIAL_COLORS = [

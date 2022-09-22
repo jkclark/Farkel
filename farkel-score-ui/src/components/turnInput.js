@@ -1,6 +1,8 @@
 import { useEffect, useRef } from "react";
 import Button from "react-bootstrap/Button";
 
+import { GOT_IN, NOT_GOT_IN } from "../constants";
+
 import "./turnInput.css";
 
 function TurnInput(props) {
@@ -36,7 +38,7 @@ function TurnInput(props) {
   }
 
   function scoreShouldCount(score) {
-    return score !== -1 && score !== -2;
+    return score !== NOT_GOT_IN && score !== GOT_IN;
   }
 
   function accumulateScores(scores) {
@@ -146,7 +148,7 @@ function TurnInput(props) {
         <Button
           variant="success"
           onClick={() => {
-            handleYesNoClick(-2);
+            handleYesNoClick(GOT_IN);
           }}
           disabled={buttonProps.disabled}
         >
@@ -155,7 +157,7 @@ function TurnInput(props) {
         <Button
           variant="danger"
           onClick={() => {
-            handleYesNoClick(-1);
+            handleYesNoClick(NOT_GOT_IN);
           }}
           disabled={buttonProps.disabled}
         >
@@ -213,7 +215,7 @@ function TurnInput(props) {
   //       it off for now.
   if (props.editingTurn !== null && props.editingPlayer !== null) {
     if (
-      [-1, -2].includes(
+      [NOT_GOT_IN, GOT_IN].includes(
         props.turnScores[props.editingTurn][props.editingPlayer]
       )
     ) {
@@ -228,7 +230,8 @@ function TurnInput(props) {
     props.turnScores.length === 0 || // Nobody has played
     (props.turnScores.length === 1 && // Still everybody's first turn
       props.turnScores[0].length < props.players.length) || // Not in yet
-    props.turnScores[props.turnScores.length - 2][props.currentPlayer] === -1
+    props.turnScores[props.turnScores.length - 2][props.currentPlayer] ===
+      NOT_GOT_IN
   );
 
   return (

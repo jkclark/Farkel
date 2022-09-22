@@ -1,5 +1,6 @@
 import Table from "react-bootstrap/Table";
 
+import { GOT_IN, NOT_GOT_IN } from "../constants";
 import crownIcon from "../img/crown.svg";
 
 import "./scoreboard.css";
@@ -10,9 +11,9 @@ function Scoreboard(props) {
   const crossMark = String.fromCodePoint("0x274C");
   function ScoreCell(cellProps) {
     let textValue;
-    if (cellProps.score === -2) {
+    if (cellProps.score === GOT_IN) {
       textValue = checkMark;
-    } else if (cellProps.score === -1) {
+    } else if (cellProps.score === NOT_GOT_IN) {
       textValue = crossMark;
     } else if (cellProps.score < -2) {
       // Negative score indicates edited value
