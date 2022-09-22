@@ -1,3 +1,13 @@
+.scoreboard-header-cell img {
+  margin-left: 0.3em;
+  vertical-align: sub;  /* Don't really understand why this is the only thing that works...*/
+}
+
+.leader-icon {
+  width: 1.2em;
+  height: 1.2em;
+}
+
 .score-cell:hover {
   /* Darken cell background on hover */
   background-color: rgba(0,0,0,.075);

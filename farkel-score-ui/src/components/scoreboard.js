@@ -1,5 +1,7 @@
 import Table from "react-bootstrap/Table";
 
+import crownIcon from "../img/crown.svg";
+
 import "./scoreboard.css";
 
 function Scoreboard(props) {
@@ -60,6 +62,28 @@ function Scoreboard(props) {
     );
   }
 
+  function getLeaderIndices() {
+    // Return an array of all players' indexes who are in the lead
+    let leaderIndices = [];
+    let max = Number.NEGATIVE_INFINITY;
+
+    for (let index = 0; index < props.totalScores.length; index++) {
+      if (props.totalScores[index] > max) {
+        max = props.totalScores[index];
+        leaderIndices = [index];
+      } else if (props.totalScores[index] === max) {
+        leaderIndices.push(index);
+      }
+    }
+
+    // Nobody is leading if everyone is tied
+    if (leaderIndices.length === props.totalScores.length) {
+      return [];
+    }
+
+    return leaderIndices;
+  }
+
   return (
     <Table striped bordered>
       <thead>
@@ -68,9 +92,15 @@ function Scoreboard(props) {
           {props.players.map((player, index) => (
             <th
               key={player}
-              className={shouldBeHighlighted(index) ? winHighlightClass : ""}
+              className={
+                "scoreboard-header-cell" +
+                (shouldBeHighlighted(index) ? winHighlightClass : "")
+              }
             >
-              {player}
+              <span>{player}</span>
+              {getLeaderIndices().includes(index) && (
+                <img src={crownIcon} className="leader-icon" alt="Leader"></img>
+              )}
             </th>
           ))}
         </tr>
