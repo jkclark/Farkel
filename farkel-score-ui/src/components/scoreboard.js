@@ -65,7 +65,46 @@ function Scoreboard(props) {
 
   function getLeaderIndices() {
     // Return an array of all players' indexes who are in the lead
+
+    // If no turns have happened, nobody is leading
+    // If we haven't played a full turn yet, don't indicate any leader(s)
+    if (
+      !props.turnScores.length ||
+      props.turnScores[0].length < props.players.length
+    ) {
+      return [];
+    }
+
     let leaderIndices = [];
+
+    // If nobody has a real score yet, anyone who is in is winning
+    if (props.totalScores.every((score) => score === 0)) {
+      // Find each player's most recent score. If they got in (or got 0), add them to the output.
+      const in_scores = [0, GOT_IN];
+      for (
+        let playerIndex = 0;
+        playerIndex < props.players.length;
+        playerIndex++
+      ) {
+        // The most recent turn might not contain everyone's most recent score
+        // If this player played this turn, use that score
+        if (playerIndex < props.turnScores.at(-1).length) {
+          if (in_scores.includes(props.turnScores.at(-1)[playerIndex])) {
+            leaderIndices.push(playerIndex);
+          }
+          continue;
+        }
+
+        // Since this player doesn't have a score in the most recent turn, use last turn's score
+        if (in_scores.includes(props.turnScores.at(-2)[playerIndex])) {
+          leaderIndices.push(playerIndex);
+        }
+      }
+
+      return leaderIndices;
+    }
+
+    // At least one person is in, so calculate the leader(s) normally
     let max = Number.NEGATIVE_INFINITY;
 
     for (let index = 0; index < props.totalScores.length; index++) {
