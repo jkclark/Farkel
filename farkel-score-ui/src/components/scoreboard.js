@@ -6,7 +6,6 @@ import crownIcon from "../img/crown.svg";
 import "./scoreboard.css";
 
 function Scoreboard(props) {
-  const winHighlightClass = "table-primary";
   const checkMark = String.fromCodePoint("0x2705");
   const crossMark = String.fromCodePoint("0x274C");
   function ScoreCell(cellProps) {
@@ -29,27 +28,20 @@ function Scoreboard(props) {
       }
     }
 
-    let highlightClass;
-    if (shouldBeHighlighted(cellProps.playerIndex)) {
-      highlightClass = winHighlightClass;
-    } else if (
-      props.editingTurn === cellProps.turnIndex &&
-      props.editingPlayer === cellProps.playerIndex
-    ) {
-      highlightClass = "editing-cell";
-    } else {
-      highlightClass = "";
-    }
-
     return (
-      <td className={"score-cell " + highlightClass} onClick={handleClick}>
+      <td
+        className={
+          "score-cell" +
+          (props.editingTurn === cellProps.turnIndex &&
+          props.editingPlayer === cellProps.playerIndex
+            ? " editing-cell"
+            : "")
+        }
+        onClick={handleClick}
+      >
         {textValue}
       </td>
     );
-  }
-
-  function shouldBeHighlighted(index) {
-    return props.gameWinner !== -1 && props.gameWinner === index;
   }
 
   // Taken from https://stackoverflow.com/a/5624139/3801865
@@ -150,13 +142,7 @@ function Scoreboard(props) {
         <tr>
           <th>Turn #</th>
           {props.players.map((player, index) => (
-            <th
-              key={player}
-              className={
-                "scoreboard-header-cell" +
-                (shouldBeHighlighted(index) ? winHighlightClass : "")
-              }
-            >
+            <th key={player} className="scoreboard-header-cell">
               <span>{player}</span>
               {getLeaderIndices().includes(index) && (
                 <img src={crownIcon} className="leader-icon" alt="Leader"></img>
@@ -181,7 +167,6 @@ function Scoreboard(props) {
                   key={playerIndex}
                   turnIndex={index}
                   playerIndex={playerIndex}
-                  highlighted={shouldBeHighlighted(playerIndex)}
                 />
               ))}
           </tr>
@@ -193,10 +178,7 @@ function Scoreboard(props) {
             <b>Total</b>
           </td>
           {props.totalScores.map((score, index) => (
-            <td
-              key={index}
-              className={shouldBeHighlighted(index) ? winHighlightClass : ""}
-            >
+            <td key={index}>
               <b>{score}</b>
             </td>
           ))}
