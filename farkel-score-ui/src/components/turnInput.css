@@ -1,3 +1,14 @@
+.turn-input {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.turn-result-inputs-stack {
+  display: flex;
+  gap: 0.5rem;
+}
+
 .yes-no-stack {
   display: flex;
   gap: 0.5rem;
@@ -8,13 +19,6 @@
   gap: 0.5rem;
 }
 
-.turn-input {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.turn-result-inputs-stack {
-  display: flex;
-  gap: 0.5rem;
+.score-input {
+  width: 10ch;
 }

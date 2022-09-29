@@ -124,7 +124,7 @@ function Scoreboard(props) {
   }
 
   return (
-    <Table bordered>
+    <Table bordered className="scoreboard-table">
       <colgroup>
         <col></col>
         {props.totalScores.map((score, index) => (
