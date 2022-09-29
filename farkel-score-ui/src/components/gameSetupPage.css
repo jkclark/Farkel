@@ -3,7 +3,7 @@
 
   width: max-content;
 
-  margin-top: calc(var(--navbar-height) + 5%);
+  margin-top: var(--navbar-margin);
 
   /* grid-template-rows: 2fr 1fr 1fr max-content 1fr; */
   gap: 0.5em;

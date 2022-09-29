@@ -1,3 +1,4 @@
 :root {
   --navbar-height: 56px;
+  --navbar-margin: calc(var(--navbar-height) + 30px);
 }
