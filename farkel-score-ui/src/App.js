@@ -2,11 +2,10 @@ import { useState } from "react";
 
 import GameSetupPage from "./components/gameSetupPage";
 import MainGamePage from "./components/mainGamePage";
+import MainNavbar from "./components/navbar";
 import PostGamePage from "./components/postGamePage";
 import WelcomePage from "./components/welcomePage";
 import { DEFAULT_WIN_NUMBER } from "./constants";
-
-import "./App.css";
 
 function App() {
   const [players, setPlayers] = useState([]);
@@ -18,6 +17,7 @@ function App() {
 
   return (
     <>
+      <MainNavbar />
       <WelcomePage />
       <GameSetupPage
         players={players}
