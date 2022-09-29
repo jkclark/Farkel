@@ -3,5 +3,5 @@
   justify-content: center;
   flex-direction: column;
 
-  margin-top: 5%;
+  margin-top: calc(var(--navbar-height) + 5%);
 }

@@ -9,7 +9,7 @@
   align-items: center;
   gap: 0.5rem;
 
-  margin-top: 5%;
+  margin-top: calc(var(--navbar-height) + 5%);
 
   width: 100%;
 }
