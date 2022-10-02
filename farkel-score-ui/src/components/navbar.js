@@ -6,6 +6,8 @@ import Modal from "react-bootstrap/Modal";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 
+import { ABOUT_CONTENTS, FAQ_CONTENTS } from "../constants";
+
 import "./navbar.css";
 
 function CustomModal(props) {
@@ -26,15 +28,6 @@ function CustomModal(props) {
 function MainNavbar() {
   const [showModal, setShowModal] = useState(false);
   const [modalContents, setModalContents] = useState({});
-  const FAQ_CONTENTS = {
-    title: "FAQ",
-    body: "FAQ body here",
-  };
-  const CONTACT_CONTENTS = {
-    title: "Contact me",
-    body: "Contact me body here",
-  };
-
   return (
     <>
       <Navbar expand="sm" bg="light" fixed="top">
@@ -58,12 +51,12 @@ function MainNavbar() {
                 onClick={(event) => {
                   event.preventDefault();
 
-                  setModalContents(CONTACT_CONTENTS);
+                  setModalContents(ABOUT_CONTENTS);
 
                   setShowModal(true);
                 }}
               >
-                Contact
+                About
               </Nav.Link>
             </Nav>
           </Navbar.Collapse>
