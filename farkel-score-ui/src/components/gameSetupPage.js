@@ -245,7 +245,6 @@ function WinNumberInput(props) {
 }
 
 function GameSetupPage(props) {
-  // This variable is a string
   const [localWinNumber, setLocalWinNumber] = useState("");
 
   function startGame() {
