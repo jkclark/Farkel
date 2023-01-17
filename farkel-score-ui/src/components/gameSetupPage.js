@@ -223,7 +223,9 @@ function WinNumberInput(props) {
     }
 
     if (allowedChars.includes(event.nativeEvent.data)) {
-      props.setLocalWinNumber(winNumber);
+      props.setLocalWinNumber(
+        winNumber === "" ? "" : parseInt(winNumber).toLocaleString("en")
+      );
     }
   }
 
@@ -234,12 +236,9 @@ function WinNumberInput(props) {
         type="text"
         className="form-control"
         name="win-number-input"
-        value={
-          props.localWinNumber === ""
-            ? ""
-            : parseInt(props.localWinNumber).toLocaleString()
-        }
+        value={props.localWinNumber}
         onInput={checkWinNumberInput}
+        placeholder={props.DEFAULT_WIN_NUMBER}
       ></input>
     </div>
   );
@@ -247,7 +246,7 @@ function WinNumberInput(props) {
 
 function GameSetupPage(props) {
   const [localWinNumber, setLocalWinNumber] = useState(
-    DEFAULT_WIN_NUMBER.toString()
+    DEFAULT_WIN_NUMBER.toLocaleString("en")
   );
 
   function startGame() {
