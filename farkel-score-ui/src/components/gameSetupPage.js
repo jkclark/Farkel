@@ -223,7 +223,9 @@ function WinNumberInput(props) {
     }
 
     if (allowedChars.includes(event.nativeEvent.data)) {
-      props.setLocalWinNumber(winNumber);
+      props.setLocalWinNumber(
+        winNumber === "" ? "" : parseInt(winNumber).toLocaleString("en")
+      );
     }
   }
 
@@ -234,21 +236,16 @@ function WinNumberInput(props) {
         type="text"
         className="form-control"
         name="win-number-input"
-        value={
-          props.localWinNumber === ""
-            ? ""
-            : parseInt(props.localWinNumber).toLocaleString()
-        }
+        value={props.localWinNumber}
         onInput={checkWinNumberInput}
+        placeholder={DEFAULT_WIN_NUMBER.toLocaleString("en")}
       ></input>
     </div>
   );
 }
 
 function GameSetupPage(props) {
-  const [localWinNumber, setLocalWinNumber] = useState(
-    DEFAULT_WIN_NUMBER.toString()
-  );
+  const [localWinNumber, setLocalWinNumber] = useState("");
 
   function startGame() {
     // Add the first turn of scores to the list
