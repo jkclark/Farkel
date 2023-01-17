@@ -13,7 +13,7 @@ import "./navbar.css";
 function CustomModal(props) {
   const { title, body } = props.contents;
   return (
-    <Modal show={props.show} onHide={props.onHide}>
+    <Modal show={props.show} onHide={props.onHide} scrollable={true}>
       <Modal.Header closeButton>
         <Modal.Title>{title}</Modal.Title>
       </Modal.Header>
