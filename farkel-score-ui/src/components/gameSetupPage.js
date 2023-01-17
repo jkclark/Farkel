@@ -246,9 +246,7 @@ function WinNumberInput(props) {
 
 function GameSetupPage(props) {
   // This variable is a string
-  const [localWinNumber, setLocalWinNumber] = useState(
-    DEFAULT_WIN_NUMBER.toLocaleString("en")
-  );
+  const [localWinNumber, setLocalWinNumber] = useState("");
 
   function startGame() {
     // Add the first turn of scores to the list
