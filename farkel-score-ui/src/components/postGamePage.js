@@ -9,6 +9,10 @@ import { ResponsiveContainer } from "recharts";
 function PostGamePage(props) {
   return (
     <Container id="post-game-page">
+      {/* This ResponsiveContainer makes the legend appear in the right place.
+         This produces an error, and I can't seem to figure out why.
+         I'm just going to leave this here for now because it works.
+     */}
       <ResponsiveContainer>
         <CumSumGraph
           players={props.players}
