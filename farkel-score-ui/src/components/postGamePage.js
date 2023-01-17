@@ -7,23 +7,12 @@ import "./postGamePage.css";
 import { ResponsiveContainer } from "recharts";
 
 function PostGamePage(props) {
-  const colors = [
-    "darkblue",
-    "darkmagenta",
-    "darkgoldenrod",
-    "darkgreen",
-    "darkorange",
-    "darkred",
-    "deeppink",
-    "deepskyblue",
-  ];
-
   return (
     <Container id="post-game-page">
       <ResponsiveContainer>
         <CumSumGraph
           players={props.players}
-          colors={colors.slice(0, props.players.length)}
+          colors={props.playerColors}
           winNumber={props.winNumber}
           turnScores={props.turnScores}
         />

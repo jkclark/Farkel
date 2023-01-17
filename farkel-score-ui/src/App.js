@@ -41,6 +41,7 @@ function App() {
       />
       <PostGamePage
         players={players}
+        playerColors={playerColors}
         winNumber={winNumber}
         turnScores={turnScores}
         totalScores={totalScores}
