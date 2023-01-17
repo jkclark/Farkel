@@ -238,13 +238,14 @@ function WinNumberInput(props) {
         name="win-number-input"
         value={props.localWinNumber}
         onInput={checkWinNumberInput}
-        placeholder={props.DEFAULT_WIN_NUMBER}
+        placeholder={DEFAULT_WIN_NUMBER.toLocaleString("en")}
       ></input>
     </div>
   );
 }
 
 function GameSetupPage(props) {
+  // This variable is a string
   const [localWinNumber, setLocalWinNumber] = useState(
     DEFAULT_WIN_NUMBER.toLocaleString("en")
   );
